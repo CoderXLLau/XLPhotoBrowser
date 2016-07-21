@@ -359,6 +359,13 @@
 
 - (void)delete
 {
+    if (self.currentImageIndex == 0) {
+        XLZoomingScrollView *currentZoomingScrollView = [self zoomingScrollViewAtIndex:self.currentImageIndex];
+        [self.reusableZoomingScrollViews addObject:currentZoomingScrollView];
+        [currentZoomingScrollView prepareForReuse];
+        [currentZoomingScrollView removeFromSuperview];
+        [self.visibleZoomingScrollViews minusSet:self.reusableZoomingScrollViews];
+    }
     self.currentImageIndex --;
     self.imageCount --;
     if (self.currentImageIndex == -1 && self.imageCount == 0) {
