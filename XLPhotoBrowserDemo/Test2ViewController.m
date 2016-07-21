@@ -16,6 +16,7 @@
  */
 - (void)clickImage:(UITapGestureRecognizer *)tap
 {
+    // 快速创建并进入浏览模式
     XLPhotoBrowser *browser = [XLPhotoBrowser showPhotoBrowserWithCurrentImageIndex:tap.view.tag imageCount:self.images.count datasource:self];
     
     // 设置长按手势弹出的地步ActionSheet数据,不实现此方法则没有长按手势
@@ -25,11 +26,12 @@
     browser.pageDotColor = [UIColor purpleColor]; ///< 此属性针对动画样式的pagecontrol无效
     browser.currentPageDotColor = [UIColor greenColor];
     browser.pageControlStyle = XLPhotoBrowserPageControlStyleAnimated;///< 修改底部pagecontrol的样式为系统样式,默认是弹性动画的样式
-
 }
 
 #pragma mark    -   XLPhotoBrowserDatasource
-
+/**
+ *  数据源方法
+ */
 - (UIImage *)photoBrowser:(XLPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index
 {
     return self.images[index];
