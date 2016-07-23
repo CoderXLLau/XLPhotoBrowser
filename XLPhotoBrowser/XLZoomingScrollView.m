@@ -245,12 +245,13 @@
     self.progressView = progressView;
     [self addSubview:progressView];
     
+    self.photoImageView.image = placeholder;
     [self setMaxAndMinZoomScales];
-    self.photoImageView.xl_width *= 0.5;
-    self.photoImageView.xl_height *= 0.5;
-    self.photoImageView.xl_centerX = self.xl_width * 0.5;
-    self.photoImageView.xl_centerY = self.xl_height * 0.5;
-    [self setNeedsLayout];
+//    self.photoImageView.xl_width *= 0.5;
+//    self.photoImageView.xl_height *= 0.5;
+//    self.photoImageView.xl_centerX = self.xl_width * 0.5;
+//    self.photoImageView.xl_centerY = self.xl_height * 0.5;
+//    [self setNeedsLayout];
     
     // 弱引用,防止循环引用
     __weak typeof(self) weakSelf = self;

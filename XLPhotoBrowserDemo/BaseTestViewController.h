@@ -20,6 +20,10 @@
  * 图片数组
  */
 @property (nonatomic , strong) NSMutableArray  *images;
+/**
+ *  url strings
+ */
+@property (nonatomic , strong) NSArray  *urlStrings;
 
 /**
  *  浏览图片
