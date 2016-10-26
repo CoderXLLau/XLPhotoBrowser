@@ -7,6 +7,7 @@
 //
 
 #import "UIView+XLExtension.h"
+#import "UIImage+XLExtension.h"
 
 /**
  *  进度视图类型类型
@@ -31,7 +32,7 @@ typedef NS_ENUM(NSUInteger, XLProgressViewMode){
 // browser背景颜色
 #define XLPhotoBrowserBackgrounColor [UIColor colorWithRed:0 green:0 blue:0 alpha:0.95]
 
-// browser中图片间的margin
+// browser 图片间的margin
 #define XLPhotoBrowserImageViewMargin 10
 
 // browser中显示图片动画时长
@@ -46,3 +47,5 @@ typedef NS_ENUM(NSUInteger, XLProgressViewMode){
 #define XLProgressViewBackgroundColor [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7]
 // 图片下载进度指示器内部控件间的间距
 #define XLProgressViewItemMargin 10
+// 圆环形图片下载进度指示器 环线宽度
+#define XLProgressViewLoopDiagramLineWidth 8

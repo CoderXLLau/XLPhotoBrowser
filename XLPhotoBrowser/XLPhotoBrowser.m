@@ -61,6 +61,7 @@
  */
 @property (nonatomic , strong) NSString  *actionSheetDeleteButtonTitle;
 @property (nonatomic, assign) CGSize pageControlDotSize;
+@property(nonatomic, strong) UIImage *placeholderImage;
 
 @end
 
@@ -144,6 +145,14 @@
     [self setUpPageControl];
 }
 
+- (UIImage *)placeholderImage
+{
+    if (!_placeholderImage) {
+        _placeholderImage = [UIImage xl_imageWithColor:[UIColor grayColor] size:CGSizeMake(100, 100)];
+    }
+    return _placeholderImage;
+}
+
 #pragma mark    -   initial
 
 - (void)awakeFromNib
@@ -165,6 +174,7 @@
     self.backgroundColor = XLPhotoBrowserBackgrounColor;
     self.visibleZoomingScrollViews = [[NSMutableSet alloc] init];
     self.reusableZoomingScrollViews = [[NSMutableSet alloc] init];
+    [self placeholderImage];
     
     _pageControlAliment = XLPhotoBrowserPageControlAlimentCenter;
     _showPageControl = YES;
@@ -331,6 +341,23 @@
 {
     [self.reusableZoomingScrollViews removeAllObjects];
     [self.visibleZoomingScrollViews removeAllObjects];
+}
+
+#pragma mark    -   private method
+
+- (UIWindow *)findTheMainWindow
+{
+    NSEnumerator *frontToBackWindows = [UIApplication.sharedApplication.windows reverseObjectEnumerator];
+    for (UIWindow *window in frontToBackWindows) {
+        BOOL windowOnMainScreen = window.screen == UIScreen.mainScreen;
+        BOOL windowIsVisible = !window.hidden && window.alpha > 0;
+        BOOL windowLevelSupported = (window.windowLevel >= UIWindowLevelNormal);
+        
+        if(windowOnMainScreen && windowIsVisible && windowLevelSupported) {
+            return window;
+        }
+    }
+    return [[[UIApplication sharedApplication] delegate] window];
 }
 
 #pragma mark    -   private -- 长按图片相关
@@ -559,7 +586,7 @@
     if (self.datasource && [self.datasource respondsToSelector:@selector(photoBrowser:placeholderImageForIndex:)]) {
         return [self.datasource photoBrowser:self placeholderImageForIndex:index];
     }
-    return nil;
+    return self.placeholderImage;
 }
 
 /**
@@ -568,7 +595,15 @@
 - (NSURL *)highQualityImageURLForIndex:(NSInteger)index
 {
     if (self.datasource && [self.datasource respondsToSelector:@selector(photoBrowser:highQualityImageURLForIndex:)]) {
-        return [self.datasource photoBrowser:self highQualityImageURLForIndex:index];
+        NSURL *url = [self.datasource photoBrowser:self highQualityImageURLForIndex:index];
+        if ([url isKindOfClass:[NSString class]]) {
+            url = [NSURL URLWithString:(NSString *)url];
+        }
+        if (![url isKindOfClass:[NSURL class]]) {
+            NSLog(@"高清大图URL数据有问题,不是NSString也不是NSURL , 错误数据:%@",url);
+        }
+        NSAssert([url isKindOfClass:[NSURL class]], @"高清大图URL数据有问题,不是NSString也不是NSURL");
+        return url;
     }
     return nil;
 }
@@ -733,21 +768,6 @@
     [window addSubview:self];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
     [self iniaialUI];
-}
-
-- (UIWindow *)findTheMainWindow
-{
-    NSEnumerator *frontToBackWindows = [UIApplication.sharedApplication.windows reverseObjectEnumerator];
-    for (UIWindow *window in frontToBackWindows) {
-        BOOL windowOnMainScreen = window.screen == UIScreen.mainScreen;
-        BOOL windowIsVisible = !window.hidden && window.alpha > 0;
-        BOOL windowLevelSupported = (window.windowLevel >= UIWindowLevelNormal);
-        
-        if(windowOnMainScreen && windowIsVisible && windowLevelSupported) {
-            return window;
-        }
-    }
-    return [[[UIApplication sharedApplication] delegate] window];
 }
 
 /**

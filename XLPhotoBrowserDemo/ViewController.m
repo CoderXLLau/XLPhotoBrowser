@@ -21,7 +21,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"示例Demo";
-    NSArray *titles = @[@"1 选择自己的照片",@"2 XLPhotoBrowserStylePageControl --> 微信样式",@"3 XLPhotoBrowserStyleIndexLabel --> 微博样式",@"4 XLPhotoBrowserStyleSimple --> 简单样式,无长按手势"];
+    NSArray *titles = @[@"1 选择自己的照片",@"2 XLPhotoBrowserStylePageControl --> 微信样式",@"3 XLPhotoBrowserStyleIndexLabel --> 微博样式",@"4 XLPhotoBrowserStyleSimple --> 简单样式,无长按手势",@"加载网络图片"];
     
     CGFloat buttonWidth = self.view.xl_width;
     CGFloat buttonHeight = 50 * xl_autoSizeScaleY;

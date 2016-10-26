@@ -242,23 +242,19 @@
     XLProgressView *progressView = [[XLProgressView alloc] init];
     progressView.bounds = CGRectMake(0, 0, 100, 100);
     progressView.mode = XLProgressViewProgressMode;
+    progressView.xl_centerX = self.xl_width * 0.5;
+    progressView.xl_centerY = self.xl_height * 0.5;
     self.progressView = progressView;
     [self addSubview:progressView];
     
     self.photoImageView.image = placeholder;
     [self setMaxAndMinZoomScales];
-//    self.photoImageView.xl_width *= 0.5;
-//    self.photoImageView.xl_height *= 0.5;
-//    self.photoImageView.xl_centerX = self.xl_width * 0.5;
-//    self.photoImageView.xl_centerY = self.xl_height * 0.5;
-//    [self setNeedsLayout];
     
-    // 弱引用,防止循环引用
     __weak typeof(self) weakSelf = self;
     
     [weakSelf.photoImageView sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         // 修改进度
-        weakSelf.progress = (CGFloat)receivedSize / expectedSize;
+        weakSelf.progress = (CGFloat)receivedSize / expectedSize ;
         
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         [weakSelf removeProgressView];
@@ -274,6 +270,9 @@
             label.clipsToBounds = YES;
             label.textAlignment = NSTextAlignmentCenter;
             [weakSelf addSubview:label];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [label removeFromSuperview];
+            });
         } else {
             weakSelf.photoImageView.image = image;
             [weakSelf.photoImageView setNeedsDisplay];
