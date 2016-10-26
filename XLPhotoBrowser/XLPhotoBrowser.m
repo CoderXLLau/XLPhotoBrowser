@@ -726,12 +726,28 @@
     if (self.currentImageIndex < 0) {
         self.currentImageIndex = 0;
     }
-    UIWindow *window = [UIApplication sharedApplication].windows.firstObject;
+    UIWindow *window = [self findTheMainWindow];
+    
     self.frame = window.bounds;
     self.alpha = 0.0;
     [window addSubview:self];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
     [self iniaialUI];
+}
+
+- (UIWindow *)findTheMainWindow
+{
+    NSEnumerator *frontToBackWindows = [UIApplication.sharedApplication.windows reverseObjectEnumerator];
+    for (UIWindow *window in frontToBackWindows) {
+        BOOL windowOnMainScreen = window.screen == UIScreen.mainScreen;
+        BOOL windowIsVisible = !window.hidden && window.alpha > 0;
+        BOOL windowLevelSupported = (window.windowLevel >= UIWindowLevelNormal);
+        
+        if(windowOnMainScreen && windowIsVisible && windowLevelSupported) {
+            return window;
+        }
+    }
+    return [[[UIApplication sharedApplication] delegate] window];
 }
 
 /**

@@ -333,6 +333,7 @@
 				TargetAttributes = {
 					538DBCAB1D3A1D7E00117463 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = QC83AGNAJ7;
 					};
 				};
 			};
@@ -523,10 +524,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = QC83AGNAJ7;
 				INFOPLIST_FILE = XLPhotoBrowserDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.tohoapp.XLPhotoBrowserDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Shannoon.XLPhotoBrowserDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -535,10 +537,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = QC83AGNAJ7;
 				INFOPLIST_FILE = XLPhotoBrowserDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.tohoapp.XLPhotoBrowserDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Shannoon.XLPhotoBrowserDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

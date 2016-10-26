@@ -61,9 +61,9 @@ static char RedTipViewKey;
     if (!self.redTipView) {
         self.redTipView = [[UILabel alloc] init];
         self.redTipView.backgroundColor = backgroundColor;
-        self.redTipView.width = width;
-        self.redTipView.height = width;
-        self.redTipView.layer.cornerRadius = self.redTipView.height * 0.5;
+        self.redTipView.xl_width = width;
+        self.redTipView.xl_height = width;
+        self.redTipView.layer.cornerRadius = self.redTipView.xl_height * 0.5;
         self.redTipView.layer.masksToBounds = YES;
         [self insertSubview:self.redTipView atIndex:self.subviews.count];
     }
@@ -93,8 +93,8 @@ static char RedTipViewKey;
     self.redTipView.textColor = [UIColor whiteColor];
     self.redTipView.font = [UIFont systemFontOfSize:13];
     [self.redTipView sizeToFit];
-    self.redTipView.width += 8.5;
-    self.redTipView.layer.cornerRadius = self.redTipView.height * 0.5;
+    self.redTipView.xl_width += 8.5;
+    self.redTipView.layer.cornerRadius = self.redTipView.xl_height * 0.5;
     self.redTipView.layer.masksToBounds = YES;
     [self insertSubview:self.redTipView atIndex:self.subviews.count];
     self.redTipView.hidden = NO;
