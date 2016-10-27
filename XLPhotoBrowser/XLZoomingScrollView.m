@@ -273,6 +273,7 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [label removeFromSuperview];
             });
+            NSLog(@"加载图片失败 , 图片链接imageURL = %@ , 检查是否开启允许HTTP请求",imageURL);
         } else {
             weakSelf.photoImageView.image = image;
             [weakSelf.photoImageView setNeedsDisplay];
