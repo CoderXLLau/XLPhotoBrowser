@@ -61,7 +61,6 @@
  */
 @property (nonatomic , strong) NSString  *actionSheetDeleteButtonTitle;
 @property (nonatomic, assign) CGSize pageControlDotSize;
-@property(nonatomic, strong) UIImage *placeholderImage;
 
 @end
 
@@ -596,13 +595,17 @@
 {
     if (self.datasource && [self.datasource respondsToSelector:@selector(photoBrowser:highQualityImageURLForIndex:)]) {
         NSURL *url = [self.datasource photoBrowser:self highQualityImageURLForIndex:index];
+        if (!url) {
+            NSLog(@"高清大图URL数据 为空,请检查代码 , 图片索引:%zd",index);
+            return nil;
+        }
         if ([url isKindOfClass:[NSString class]]) {
             url = [NSURL URLWithString:(NSString *)url];
         }
         if (![url isKindOfClass:[NSURL class]]) {
-            NSLog(@"高清大图URL数据有问题,不是NSString也不是NSURL , 错误数据:%@",url);
+            NSLog(@"高清大图URL数据有问题,不是NSString也不是NSURL , 错误数据:%@ , 图片索引:%zd",url,index);
         }
-        NSAssert([url isKindOfClass:[NSURL class]], @"高清大图URL数据有问题,不是NSString也不是NSURL");
+//        NSAssert([url isKindOfClass:[NSURL class]], @"高清大图URL数据有问题,不是NSString也不是NSURL");
         return url;
     }
     return nil;

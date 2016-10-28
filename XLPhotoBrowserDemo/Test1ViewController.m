@@ -109,7 +109,7 @@
 //    [browser show];
     
     // 2.用法二:
-    XLPhotoBrowser *browser = [XLPhotoBrowser showPhotoBrowserWithCurrentImageIndex:tap.view.tag imageCount:self.images.count datasource:self];
+    [XLPhotoBrowser showPhotoBrowserWithCurrentImageIndex:tap.view.tag imageCount:self.images.count datasource:self];
 }
 
 #pragma mark    -   XLPhotoBrowserDatasource

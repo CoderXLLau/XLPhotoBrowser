@@ -81,7 +81,7 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
 
 @required
 /**
- *  返回这个位置的占位图片 , 也可以是原图
+ *  返回这个位置的占位图片 , 也可以是原图(如果不实现此方法,框架内部会默认生成并使用一张灰色的图片)
  *
  *  @param browser 浏览器
  *  @param index   位置索引
@@ -148,6 +148,11 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
  *  browser style
  */
 @property (nonatomic , assign) XLPhotoBrowserStyle browserStyle;
+/**
+ *  占位图片,可选(默认是一张灰色的100*100像素图片) 
+ *  当没有实现数据源中placeholderImageForIndex方法时,默认会使用这个
+ */
+@property(nonatomic, strong) UIImage *placeholderImage;
 
 
 #pragma mark    ----------------------

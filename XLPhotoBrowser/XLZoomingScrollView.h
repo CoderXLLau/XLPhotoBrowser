@@ -63,7 +63,7 @@
 /**
  *  调整尺寸
  */
-- (void)setMaxMinZoomScalesForCurrentBounds;
+- (void)setMaxAndMinZoomScales;
 /**
  *  重用，清理资源
  */

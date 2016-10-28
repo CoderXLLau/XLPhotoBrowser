@@ -14,7 +14,8 @@
 @interface XLZoomingScrollView () <UIScrollViewDelegate>
 
 @property (nonatomic , strong) UIImageView  *photoImageView;
-@property (nonatomic , weak) XLProgressView *progressView;
+@property (nonatomic , strong) XLProgressView *progressView;
+@property(nonatomic, strong) UILabel *stateLabel;
 
 @end
 
@@ -48,6 +49,29 @@
     }
     
     return _photoImageView;
+}
+
+- (UILabel *)stateLabel
+{
+    if (_stateLabel == nil) {
+        _stateLabel = [[UILabel alloc] init];
+        _stateLabel.text = XLPhotoBrowserLoadNetworkImageFail;
+        _stateLabel.font = [UIFont systemFontOfSize:16];
+        _stateLabel.textColor = [UIColor whiteColor];
+        _stateLabel.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
+        _stateLabel.layer.cornerRadius = 5;
+        _stateLabel.clipsToBounds = YES;
+        _stateLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _stateLabel;
+}
+
+- (XLProgressView *)progressView
+{
+    if (_progressView == nil) {
+        _progressView = [[XLProgressView alloc] init];
+    }
+    return _progressView;
 }
 
 #pragma mark    -   initial UI
@@ -118,6 +142,13 @@
     if (!CGRectEqualToRect(self.photoImageView.frame, frameToCenter)){
         self.photoImageView.frame = frameToCenter;
     }
+    
+    self.stateLabel.bounds = CGRectMake(0, 0, 160, 30);
+    self.stateLabel.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
+    self.progressView.bounds = CGRectMake(0, 0, 100, 100);
+    self.progressView.xl_centerX = self.xl_width * 0.5;
+    self.progressView.xl_centerY = self.xl_height * 0.5;
+
 }
 
 #pragma mark    -   UIScrollViewDelegate
@@ -141,13 +172,6 @@
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
 {
     self.userInteractionEnabled = YES;
-}
-
-#pragma mark    -   private method - other
-
-- (void)removeProgressView
-{
-    [self.progressView removeFromSuperview];
 }
 
 #pragma mark    -   private method - 手势处理,缩放图片
@@ -239,46 +263,33 @@
         [self setShowImage:placeholder];
         return;
     }
-    XLProgressView *progressView = [[XLProgressView alloc] init];
-    progressView.bounds = CGRectMake(0, 0, 100, 100);
-    progressView.mode = XLProgressViewProgressMode;
-    progressView.xl_centerX = self.xl_width * 0.5;
-    progressView.xl_centerY = self.xl_height * 0.5;
-    self.progressView = progressView;
-    [self addSubview:progressView];
     
     self.photoImageView.image = placeholder;
     [self setMaxAndMinZoomScales];
     
     __weak typeof(self) weakSelf = self;
-    
+    //初始化进度条
+    self.progress = 0.01;
+    [self addSubview:self.progressView];;
+    self.progressView.mode = XLProgressViewProgressMode;
+
     [weakSelf.photoImageView sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         // 修改进度
         weakSelf.progress = (CGFloat)receivedSize / expectedSize ;
-        
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        [weakSelf removeProgressView];
+        [self.progressView removeFromSuperview];
         if (error) {
-            UILabel *label = [[UILabel alloc] init];
-            label.bounds = CGRectMake(0, 0, 160, 30);
-            label.center = CGPointMake(weakSelf.bounds.size.width * 0.5, weakSelf.bounds.size.height * 0.5);
-            label.text = @"图片加载失败";
-            label.font = [UIFont systemFontOfSize:16];
-            label.textColor = [UIColor whiteColor];
-            label.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
-            label.layer.cornerRadius = 5;
-            label.clipsToBounds = YES;
-            label.textAlignment = NSTextAlignmentCenter;
-            [weakSelf addSubview:label];
+            [weakSelf addSubview:weakSelf.stateLabel];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [label removeFromSuperview];
+                [weakSelf.stateLabel removeFromSuperview];
             });
             NSLog(@"加载图片失败 , 图片链接imageURL = %@ , 检查是否开启允许HTTP请求",imageURL);
         } else {
+            [weakSelf.stateLabel removeFromSuperview];
             weakSelf.photoImageView.image = image;
             [weakSelf.photoImageView setNeedsDisplay];
             [UIView animateWithDuration:0.25 animations:^{
-                [self setMaxAndMinZoomScales];
+                [weakSelf setMaxAndMinZoomScales];
             }];
         }
     }];
@@ -316,6 +327,8 @@
     [self setMaxAndMinZoomScales];
     self.photoImageView.image = nil;
     self.hasLoadedImage = NO;
+    [self.stateLabel removeFromSuperview];
+    [self.progressView removeFromSuperview];
 }
 
 @end
