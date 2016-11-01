@@ -16,12 +16,21 @@
 @property (nonatomic , strong) UIImageView  *photoImageView;
 @property (nonatomic , strong) XLProgressView *progressView;
 @property(nonatomic, strong) UILabel *stateLabel;
+@property(nonatomic, strong) UIView *maskView;
 
 @end
 
 @implementation XLZoomingScrollView
 
 #pragma mark    -   set / get
+
+- (UIView *)maskView
+{
+    if (_maskView == nil) {
+        _maskView = [[UIView alloc] init];
+    }
+    return _maskView;
+}
 
 - (void)setProgress:(CGFloat)progress
 {
@@ -117,8 +126,12 @@
     [singleTapBackgroundView requireGestureRecognizerToFail:doubleTapBackgroundView];
     [self addGestureRecognizer:singleTapBackgroundView];
     [self addGestureRecognizer:doubleTapBackgroundView];
+    
+    [self.maskView addGestureRecognizer:singleTapBackgroundView];
+    self.maskView.hidden = YES;
+    self.maskView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.6];
+    [self addSubview:self.maskView];
 }
-
 
 - (void)layoutSubviews
 {
@@ -148,6 +161,8 @@
     self.progressView.bounds = CGRectMake(0, 0, 100, 100);
     self.progressView.xl_centerX = self.xl_width * 0.5;
     self.progressView.xl_centerY = self.xl_height * 0.5;
+    
+    self.maskView.frame = CGRectMake(0, 0, self.xl_width, self.xl_height);
 
 }
 
@@ -237,6 +252,12 @@
     [self handleDoubleTap:CGPointMake(touchX, touchY)];
 }
 
+- (void)resetZoomScale
+{
+    self.maximumZoomScale = 1.0;
+    self.minimumZoomScale = 1.0;
+}
+
 #pragma mark    -   public method
 
 /**
@@ -274,15 +295,20 @@
     self.progressView.mode = XLProgressViewProgressMode;
 
     [weakSelf.photoImageView sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
-        // 修改进度
-        weakSelf.progress = (CGFloat)receivedSize / expectedSize ;
+        if (expectedSize>0) {
+            // 修改进度
+            weakSelf.progress = (CGFloat)receivedSize / expectedSize ;
+        }
+        [self resetZoomScale];
+        
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         [self.progressView removeFromSuperview];
         if (error) {
+            [self setMaxAndMinZoomScales];
             [weakSelf addSubview:weakSelf.stateLabel];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [weakSelf.stateLabel removeFromSuperview];
-            });
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                [weakSelf.stateLabel removeFromSuperview];
+//            });
             NSLog(@"加载图片失败 , 图片链接imageURL = %@ , 检查是否开启允许HTTP请求",imageURL);
         } else {
             [weakSelf.stateLabel removeFromSuperview];
@@ -302,6 +328,9 @@
 {
     // self.photoImageView的初始位置
     UIImage *image = self.photoImageView.image;
+    if (image == nil || image.size.height==0) {
+        return;
+    }
     CGFloat imageWidthHeightRatio = image.size.width / image.size.height;
     self.photoImageView.xl_width = XLScreenW;
     self.photoImageView.xl_height = XLScreenW / imageWidthHeightRatio;
