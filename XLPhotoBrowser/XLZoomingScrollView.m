@@ -16,7 +16,7 @@
 @property (nonatomic , strong) UIImageView  *photoImageView;
 @property (nonatomic , strong) XLProgressView *progressView;
 @property(nonatomic, strong) UILabel *stateLabel;
-@property(nonatomic, strong) UIView *maskView;
+@property(nonatomic, strong) UIView *zoomMaskView;
 
 @end
 
@@ -24,12 +24,12 @@
 
 #pragma mark    -   set / get
 
-- (UIView *)maskView
+- (UIView *)zoomMaskView
 {
-    if (_maskView == nil) {
-        _maskView = [[UIView alloc] init];
+    if (_zoomMaskView == nil) {
+        _zoomMaskView = [[UIView alloc] init];
     }
-    return _maskView;
+    return _zoomMaskView;
 }
 
 - (void)setProgress:(CGFloat)progress
@@ -108,29 +108,15 @@
     self.showsHorizontalScrollIndicator = NO;
     self.delegate = self;
     self.backgroundColor= [UIColor clearColor];
-    self.photoImageView.userInteractionEnabled = YES;
     self.photoImageView.backgroundColor = [UIColor clearColor];
-    UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTap:)];
-    UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTap:)];
-    doubleTap.numberOfTapsRequired = 2;
-    // 分隔开单击和双击手势冲突
-    [singleTap requireGestureRecognizerToFail:doubleTap];
-    [self.photoImageView addGestureRecognizer:singleTap];
-    [self.photoImageView addGestureRecognizer:doubleTap];
     [self addSubview:self.photoImageView];
 
     UITapGestureRecognizer *singleTapBackgroundView = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapBackgroundView:)];
     UITapGestureRecognizer *doubleTapBackgroundView = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapBackgroundView:)];
     doubleTapBackgroundView.numberOfTapsRequired = 2;
-    // 分隔开单击和双击手势冲突
     [singleTapBackgroundView requireGestureRecognizerToFail:doubleTapBackgroundView];
     [self addGestureRecognizer:singleTapBackgroundView];
     [self addGestureRecognizer:doubleTapBackgroundView];
-    
-    [self.maskView addGestureRecognizer:singleTapBackgroundView];
-    self.maskView.hidden = YES;
-    self.maskView.backgroundColor = [[UIColor redColor] colorWithAlphaComponent:0.6];
-    [self addSubview:self.maskView];
 }
 
 - (void)layoutSubviews
@@ -161,9 +147,6 @@
     self.progressView.bounds = CGRectMake(0, 0, 100, 100);
     self.progressView.xl_centerX = self.xl_width * 0.5;
     self.progressView.xl_centerY = self.xl_height * 0.5;
-    
-    self.maskView.frame = CGRectMake(0, 0, self.xl_width, self.xl_height);
-
 }
 
 #pragma mark    -   UIScrollViewDelegate
@@ -179,10 +162,10 @@
     return self.photoImageView;
 }
 
-- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view
-{
-    self.scrollEnabled = YES;
-}
+//- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view
+//{
+//    self.scrollEnabled = YES;
+//}
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
 {
@@ -207,7 +190,6 @@
 {
     self.userInteractionEnabled = NO;
     CGRect zoomRect = [self zoomRectForScale:[self willBecomeZoomScale] withCenter:point];
-//    NSLog(@"1111111  zoomRect = %@",NSStringFromCGRect(zoomRect));
     [self zoomToRect:zoomRect animated:YES];
 }
 
@@ -241,6 +223,8 @@
 
 - (void)doubleTapBackgroundView:(UITapGestureRecognizer *)doubleTap
 {
+#warning TODO 需要再优化这里的算法
+
     self.userInteractionEnabled = NO;
     CGPoint point = [doubleTap locationInView:doubleTap.view];
     CGFloat touchX = point.x;
