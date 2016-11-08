@@ -195,7 +195,18 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
 #pragma mark    XLPhotoBrowser控制接口
 
 /**
- *  快速创建并进入图片浏览器
+ *  快速创建并进入图片浏览器 , 同时传入数据源对象和代理对象
+ *
+ *  @param currentImageIndex 开始展示的图片索引
+ *  @param imageCount        图片数量
+ *  @param datasource        数据源
+ *  @param delegate          代理
+ *
+ */
++ (instancetype)showPhotoBrowserWithCurrentImageIndex:(NSInteger)currentImageIndex imageCount:(NSUInteger)imageCount datasource:(id<XLPhotoBrowserDatasource>)datasource delegate:(id<XLPhotoBrowserDelegate>)delegate;
+
+/**
+ *  快速创建并进入图片浏览器 , 同时传入数据源对象
  *
  *  @param currentImageIndex 开始展示的图片索引
  *  @param imageCount        图片数量
@@ -203,22 +214,17 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
  *
  */
 + (instancetype)showPhotoBrowserWithCurrentImageIndex:(NSInteger)currentImageIndex imageCount:(NSUInteger)imageCount datasource:(id<XLPhotoBrowserDatasource>)datasource;
+
 /**
- *  进入图片浏览器
- *
- *  @param index      从哪一张开始浏览,默认第一张
- *  @param imageCount 要浏览图片的总个数
- *  @param datasource        数据源
+ 一行代码展示 (在某些使用场景,不需要做很复杂的操作,例如不需要长按弹出actionSheet,从而不需要实现数据源方法和代理方法,那么可以选择这个方法,直接传数据源数组进来,框架内部做处理)
+ 
+ @param images            图片数据源数组(数组内部可以是UIImage/NSURL网络图片地址/ALAsset,但只能是其中一种)
+ @param currentImageIndex 展示第几张,从0开始
+ 
+ @return XLPhotoBrowser实例对象
  */
-- (void)showWithImageIndex:(NSInteger)index imageCount:(NSInteger)imageCount datasource:(id<XLPhotoBrowserDatasource>)datasource;
-/**
- *  进入图片浏览器
- */
-- (void)show;
-/**
- *  退出
- */
-- (void)dismiss;
++ (instancetype)showPhotoBrowserWithImages:(NSArray *)images currentImageIndex:(NSInteger)currentImageIndex;
+
 /**
  *  初始化底部ActionSheet弹框数据 , 不实现此方法,则没有类似微信那种长按手势弹框
  *
@@ -233,18 +239,13 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
  *  保存当前展示的图片
  */
 - (void)saveCurrentShowImage;
-
-#pragma mark    ----------------------
-#pragma mark    XLPhotoBrowser简易使用方式:一行代码展示
-
 /**
- 一行代码展示(在某些使用场景,不需要做很复杂的操作,例如不需要长按弹出actionSheet,从而不需要实现数据源方法和代理方法,那么可以选择这个方法,直接传数据源数组进来,框架内部做处理)
-
- @param images            图片数据源数组(数组内部可以是UIImage/NSURL网络图片地址/ALAsset,但只能是其中一种)
- @param currentImageIndex 展示第几张,从0开始
-
- @return XLPhotoBrowser实例对象
+ *  进入图片浏览器
  */
-+ (instancetype)showPhotoBrowserWithImages:(NSArray *)images currentImageIndex:(NSInteger)currentImageIndex;
+- (void)show;
+/**
+ *  退出
+ */
+- (void)dismiss;
 
 @end

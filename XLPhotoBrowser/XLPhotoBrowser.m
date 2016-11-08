@@ -786,6 +786,22 @@
  *  @param currentImageIndex 开始展示的图片索引
  *  @param imageCount        图片数量
  *  @param datasource        数据源
+ *  @param delegate          代理
+ *
+ */
++ (instancetype)showPhotoBrowserWithCurrentImageIndex:(NSInteger)currentImageIndex imageCount:(NSUInteger)imageCount datasource:(id<XLPhotoBrowserDatasource>)datasource delegate:(id<XLPhotoBrowserDelegate>)delegate
+{
+    XLPhotoBrowser *browser = [self showPhotoBrowserWithCurrentImageIndex:currentImageIndex imageCount:imageCount datasource:datasource];
+    browser.delegate = delegate;
+    return browser;
+}
+
+/**
+ *  快速创建并进入图片浏览器
+ *
+ *  @param currentImageIndex 开始展示的图片索引
+ *  @param imageCount        图片数量
+ *  @param datasource        数据源
  *
  */
 + (instancetype)showPhotoBrowserWithCurrentImageIndex:(NSInteger)currentImageIndex imageCount:(NSUInteger)imageCount datasource:(id<XLPhotoBrowserDatasource>)datasource
@@ -798,19 +814,19 @@
     return browser;
 }
 
-/**
- *  进入图片浏览器
- *
- *  @param index      从哪一张开始浏览,默认第一章
- *  @param imageCount 要浏览图片的总个数
- */
-- (void)showWithImageIndex:(NSInteger)index imageCount:(NSInteger)imageCount datasource:(id<XLPhotoBrowserDatasource>)datasource
-{
-    self.currentImageIndex = index;
-    self.imageCount = imageCount;
-    self.datasource = datasource;
-    [self show];
-}
+///**
+// *  进入图片浏览器
+// *
+// *  @param index      从哪一张开始浏览,默认第一章
+// *  @param imageCount 要浏览图片的总个数
+// */
+//- (void)showWithImageIndex:(NSInteger)index imageCount:(NSInteger)imageCount datasource:(id<XLPhotoBrowserDatasource>)datasource
+//{
+//    self.currentImageIndex = index;
+//    self.imageCount = imageCount;
+//    self.datasource = datasource;
+//    [self show];
+//}
 
 - (void)show
 {
@@ -884,8 +900,7 @@
     [self saveImage];
 }
 
-#pragma mark    ----------------------
-#pragma mark    XLPhotoBrowser简易使用方式:一行代码展示
+#pragma mark    -   public method  -->  XLPhotoBrowser简易使用方式:一行代码展示
 
 /**
  一行代码展示(在某些使用场景,不需要做很复杂的操作,例如不需要长按弹出actionSheet,从而不需要实现数据源方法和代理方法,那么可以选择这个方法,直接传数据源数组进来,框架内部做处理)
