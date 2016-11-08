@@ -1,19 +1,23 @@
+## 支持多种图片浏览样式
+#### 类似微信图片浏览样式 , 底部有个pagecontrol显示图片索引
+#### 类似微博图片浏览样式 , 上面有个UILabel显示图片索引
+#### 简单样式 , 上面有UILabel显示图片索引,坐下部分有个保存按钮,可以保存当前图片
+![类似微信图片浏览样式](http://upload-images.jianshu.io/upload_images/1455933-b4c2ca579f5c3d27.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)![类似微博图片浏览样式](http://upload-images.jianshu.io/upload_images/1455933-f10cad7f73406736.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)![简单样式1](http://upload-images.jianshu.io/upload_images/1455933-fa237c8791989f48.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
 
 # 1.XLPhotoBrowser描述
   -  一个优雅的图片浏览器,效果类似微信多图片浏览器(同时包含微博多图片浏览效果),支持弹出动画和回缩动画.
   -  效果图:
   
-![XLPhotoBrowserDemo.gif](http://upload-images.jianshu.io/upload_images/1455933-597296ec3f5594a0.gif?imageMogr2/auto-orient/strip)
-
-
-![XLPhotoBrowserDemo2.gif](http://upload-images.jianshu.io/upload_images/1455933-1b3f77d0f122d42e.gif?imageMogr2/auto-orient/strip)
+![XLPhotoBrowserDemo.gif](http://upload-images.jianshu.io/upload_images/1455933-597296ec3f5594a0.gif?imageMogr2/auto-orient/strip)![XLPhotoBrowserDemo2.gif](http://upload-images.jianshu.io/upload_images/1455933-1b3f77d0f122d42e.gif?imageMogr2/auto-orient/strip)
 
 #2. 安装方法
 *	下载示例Demo,把里面的XLPhotoBrowser文件夹拖到你的项目中即可(注意: 里面用到了一些第三方的类,如果你的项目中已经使用了这些库,可以视情况删除)
 
 # 3. 使用说明 : 
 
--     3.1 快速创建并进入浏览模式
+*	3.1 快速创建并进入浏览模式
 
 ```
 
@@ -22,7 +26,7 @@
 ```
 
 
--	 3.2 设置长按手势弹出的地步ActionSheet数据,不实现此方法则没有长按手势
+*	3.2 设置长按手势弹出的地步ActionSheet数据,不实现此方法则没有长按手势
 
 ```
 
@@ -31,7 +35,7 @@
 ```
 
 
--    3.3 自定义一些属性
+*	3.3 自定义一些属性
 
 ```
 
@@ -43,7 +47,7 @@
     
 ```
 
--    3.4 必须实现数据源
+*	3.4 必须实现数据源
 
 ```
 
