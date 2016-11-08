@@ -10,27 +10,19 @@
 #import "XLProgressView.h"
 
 #import "UIImageView+WebCache.h"
+#import "SDImageCache.h"
 
 @interface XLZoomingScrollView () <UIScrollViewDelegate>
 
 @property (nonatomic , strong) UIImageView  *photoImageView;
 @property (nonatomic , strong) XLProgressView *progressView;
 @property(nonatomic, strong) UILabel *stateLabel;
-@property(nonatomic, strong) UIView *zoomMaskView;
 
 @end
 
 @implementation XLZoomingScrollView
 
 #pragma mark    -   set / get
-
-- (UIView *)zoomMaskView
-{
-    if (_zoomMaskView == nil) {
-        _zoomMaskView = [[UIView alloc] init];
-    }
-    return _zoomMaskView;
-}
 
 - (void)setProgress:(CGFloat)progress
 {
@@ -269,6 +261,14 @@
         return;
     }
     
+    UIImage *showImage = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:[url absoluteString]];
+    if (showImage) {
+        XLFormatLog(@"已经下载过图片,直接从缓存中获取");
+        self.photoImageView.image = showImage;
+        [self setMaxAndMinZoomScales];
+        return;
+    }
+    
     self.photoImageView.image = placeholder;
     [self setMaxAndMinZoomScales];
     
@@ -278,7 +278,7 @@
     [self addSubview:self.progressView];;
     self.progressView.mode = XLProgressViewProgressMode;
 
-    [weakSelf.photoImageView sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+    [weakSelf.photoImageView sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed| SDWebImageLowPriority| SDWebImageHandleCookies progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         if (expectedSize>0) {
             // 修改进度
             weakSelf.progress = (CGFloat)receivedSize / expectedSize ;
@@ -293,7 +293,7 @@
 //            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 //                [weakSelf.stateLabel removeFromSuperview];
 //            });
-            NSLog(@"加载图片失败 , 图片链接imageURL = %@ , 检查是否开启允许HTTP请求",imageURL);
+            XLFormatLog(@"加载图片失败 , 图片链接imageURL = %@ , 检查是否开启允许HTTP请求",imageURL);
         } else {
             [weakSelf.stateLabel removeFromSuperview];
             weakSelf.photoImageView.image = image;

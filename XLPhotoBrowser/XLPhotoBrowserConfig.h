@@ -8,6 +8,7 @@
 
 #import "UIView+XLExtension.h"
 #import "UIImage+XLExtension.h"
+#define XLPhotoBrowserDebug 1
 
 /**
  *  进度视图类型类型
@@ -49,3 +50,21 @@ typedef NS_ENUM(NSUInteger, XLProgressViewMode){
 #define XLProgressViewItemMargin 10
 // 圆环形图片下载进度指示器 环线宽度
 #define XLProgressViewLoopDiagramLineWidth 8
+
+
+
+#define XLPBLog(...) XLFormatLog(__VA_ARGS__)
+
+#if XLPhotoBrowserDebug
+#define XLFormatLog(...)\
+{\
+NSString *string = [NSString stringWithFormat:__VA_ARGS__];\
+NSLog(@"\n===========================\n===========================\n=== XLPhotoBrowser' Log ===\n提示信息:%@\n所在方法:%s\n所在行数:%d\n===========================\n===========================",string,__func__,__LINE__);\
+}\
+
+#else
+#define XLFormatLog(...)
+#endif
+
+
+

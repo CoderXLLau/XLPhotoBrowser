@@ -61,6 +61,7 @@
  */
 @property (nonatomic , strong) NSString  *actionSheetDeleteButtonTitle;
 @property (nonatomic, assign) CGSize pageControlDotSize;
+@property(nonatomic, strong) NSArray *images;
 
 @end
 
@@ -196,7 +197,6 @@
     [self setUpToolBars];
     [self setUpBrowserStyle];
     [self showFirstImage];
-    [self setUpImageForZoomingScrollViewAtIndex:self.currentImageIndex];
     [self updatePageControlIndex];
 }
 
@@ -215,6 +215,9 @@
     self.scrollView.contentSize = CGSizeMake((self.scrollView.frame.size.width) * self.imageCount, 0);
     [self addSubview:self.scrollView];
     self.scrollView.contentOffset = CGPointMake(self.currentImageIndex * (self.scrollView.frame.size.width), 0);
+    if (self.currentImageIndex == 0) { // 修复bug , 如果刚进入的时候是0,不会调用scrollViewDidScroll:方法,不会展示第一张图片
+        [self showPhotos];
+    }
 }
 
 /**
@@ -244,12 +247,12 @@
         {
             UIPageControl *pageControl = [[UIPageControl alloc] init];
             _pageControl = pageControl;
-            pageControl.currentPage = self.currentImageIndex;
             pageControl.numberOfPages = self.imageCount;
             pageControl.currentPageIndicatorTintColor = self.currentPageDotColor;
             pageControl.pageIndicatorTintColor = self.pageDotColor;
             pageControl.userInteractionEnabled = NO;
             [self addSubview:pageControl];
+            pageControl.currentPage = self.currentImageIndex;
         }
             break;
         default:
@@ -584,6 +587,12 @@
 {
     if (self.datasource && [self.datasource respondsToSelector:@selector(photoBrowser:placeholderImageForIndex:)]) {
         return [self.datasource photoBrowser:self placeholderImageForIndex:index];
+    } else if(self.images.count>index) {
+        if ([self.images[index] isKindOfClass:[UIImage class]]) {
+            return self.images[index];
+        } else {
+            return self.placeholderImage;
+        }
     }
     return self.placeholderImage;
 }
@@ -596,17 +605,26 @@
     if (self.datasource && [self.datasource respondsToSelector:@selector(photoBrowser:highQualityImageURLForIndex:)]) {
         NSURL *url = [self.datasource photoBrowser:self highQualityImageURLForIndex:index];
         if (!url) {
-            NSLog(@"高清大图URL数据 为空,请检查代码 , 图片索引:%zd",index);
+            XLPBLog(@"高清大图URL数据 为空,请检查代码 , 图片索引:%zd",index);
             return nil;
         }
         if ([url isKindOfClass:[NSString class]]) {
             url = [NSURL URLWithString:(NSString *)url];
         }
         if (![url isKindOfClass:[NSURL class]]) {
-            NSLog(@"高清大图URL数据有问题,不是NSString也不是NSURL , 错误数据:%@ , 图片索引:%zd",url,index);
+            XLPBLog(@"高清大图URL数据有问题,不是NSString也不是NSURL , 错误数据:%@ , 图片索引:%zd",url,index);
         }
 //        NSAssert([url isKindOfClass:[NSURL class]], @"高清大图URL数据有问题,不是NSString也不是NSURL");
         return url;
+    } else if(self.images.count>index) {
+        if ([self.images[index] isKindOfClass:[NSURL class]]) {
+            return self.images[index];
+        } else if ([self.images[index] isKindOfClass:[NSString class]]) {
+            NSURL *url = [NSURL URLWithString:self.images[index]];
+            return url;
+        } else {
+            return nil;
+        }
     }
     return nil;
 }
@@ -618,6 +636,12 @@
 {
     if (self.datasource && [self.datasource respondsToSelector:@selector(photoBrowser:assetForIndex:)]) {
         return [self.datasource photoBrowser:self assetForIndex:index];
+    } else if (self.images.count > index) {
+        if ([self.images[index] isKindOfClass:[ALAsset class]]) {
+            return self.images[index];
+        } else {
+            return nil;
+        }
     }
     return nil;
 }
@@ -648,7 +672,7 @@
         [UIView animateWithDuration:0.25 animations:^{
             self.alpha = 1.0;
         }];
-        NSLog(@"需要提供源视图才能做动画缩放");
+        XLPBLog(@"需要提供源视图才能做弹出/退出图片浏览器的缩放动画");
         return;
     }
     startRect = [self.sourceImageView.superview convertRect:self.sourceImageView.frame toView:self];
@@ -717,6 +741,41 @@
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
     }];
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self showPhotos];
+    NSInteger pageNum = floor((scrollView.contentOffset.x + scrollView.bounds.size.width * 0.5) / scrollView.bounds.size.width);
+    self.currentImageIndex = pageNum == self.imageCount ? pageNum - 1 : pageNum;
+    [self updatePageControlIndex];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    NSInteger pageNum = floor((scrollView.contentOffset.x + scrollView.bounds.size.width * 0.5) / scrollView.bounds.size.width);
+    self.currentImageIndex = pageNum == self.imageCount ? pageNum - 1 : pageNum;
+    [self updatePageControlIndex];
+}
+
+/**
+ *  修改图片指示索引label
+ */
+- (void)updatePageControlIndex
+{
+    if (self.imageCount == 1 && self.hidesForSinglePage == YES) {
+        self.indexLabel.hidden = YES;
+        self.pageControl.hidden = YES;
+        return;
+    }
+    UIPageControl *pageControl = (UIPageControl *)self.pageControl;
+    pageControl.currentPage = self.currentImageIndex;
+    NSString *title = [NSString stringWithFormat:@"%lu / %lu",self.currentImageIndex+1,(unsigned long)self.imageCount];
+    self.indexLabel.text = title;
+    
+    [self setUpBrowserStyle];
 }
 
 #pragma mark    -   public method
@@ -825,39 +884,38 @@
     [self saveImage];
 }
 
-#pragma mark - UIScrollViewDelegate
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    [self showPhotos];
-    NSInteger pageNum = floor((scrollView.contentOffset.x + scrollView.bounds.size.width * 0.5) / scrollView.bounds.size.width);
-    self.currentImageIndex = pageNum == self.imageCount ? pageNum - 1 : pageNum;
-    [self updatePageControlIndex];
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    NSInteger pageNum = floor((scrollView.contentOffset.x + scrollView.bounds.size.width * 0.5) / scrollView.bounds.size.width);
-    self.currentImageIndex = pageNum == self.imageCount ? pageNum - 1 : pageNum;
-    [self updatePageControlIndex];
-}
+#pragma mark    ----------------------
+#pragma mark    XLPhotoBrowser简易使用方式:一行代码展示
 
 /**
- *  修改图片指示索引label
+ 一行代码展示(在某些使用场景,不需要做很复杂的操作,例如不需要长按弹出actionSheet,从而不需要实现数据源方法和代理方法,那么可以选择这个方法,直接传数据源数组进来,框架内部做处理)
+ 
+ @param images            图片数据源数组(,内部可以是UIImage/NSURL网络图片地址/ALAsset)
+ @param currentImageIndex 展示第几张
+ 
+ @return XLPhotoBrowser实例对象
  */
-- (void)updatePageControlIndex
++ (instancetype)showPhotoBrowserWithImages:(NSArray *)images currentImageIndex:(NSInteger)currentImageIndex
 {
-    if (self.imageCount == 1 && self.hidesForSinglePage == YES) {
-        self.indexLabel.hidden = YES;
-        self.pageControl.hidden = YES;
-        return;
+    if (images.count <=0 || images ==nil) {
+        XLPBLog(@"一行代码展示图片浏览的方法,传入的数据源为空,不进入图片浏览,请检查传入数据源");
+        return nil;
     }
-    UIPageControl *pageControl = (UIPageControl *)self.pageControl;
-    pageControl.currentPage = self.currentImageIndex;
-    NSString *title = [NSString stringWithFormat:@"%lu / %lu",self.currentImageIndex+1,(unsigned long)self.imageCount];
-    self.indexLabel.text = title;
     
-    [self setUpBrowserStyle];
+    Class imageClass = [images.firstObject class];
+    for (id image in images) {
+        if (![image isKindOfClass:imageClass]) {
+            XLPBLog(@"传入的数据源数组内对象类型不一致,暂不支持,请检查");
+            return nil;
+        }
+    }
+    
+    XLPhotoBrowser *browser = [[XLPhotoBrowser alloc] init];
+    browser.imageCount = images.count;
+    browser.currentImageIndex = currentImageIndex;
+    browser.images = images;
+    [browser show];
+    return browser;
 }
 
 @end

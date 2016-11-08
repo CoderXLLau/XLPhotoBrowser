@@ -79,7 +79,7 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
 
 @protocol XLPhotoBrowserDatasource <NSObject>
 
-@required
+@optional
 /**
  *  返回这个位置的占位图片 , 也可以是原图(如果不实现此方法,框架内部会默认生成并使用一张灰色的图片)
  *
@@ -90,7 +90,6 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
  */
 - (UIImage *)photoBrowser:(XLPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index;
 
-@optional
 /**
  *  返回指定位置的大图URL
  *
@@ -207,7 +206,7 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
 /**
  *  进入图片浏览器
  *
- *  @param index      从哪一张开始浏览,默认第一章
+ *  @param index      从哪一张开始浏览,默认第一张
  *  @param imageCount 要浏览图片的总个数
  *  @param datasource        数据源
  */
@@ -230,10 +229,22 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
  *  @param otherButtonTitles      其他按钮数组
  */
 - (void)setActionSheetWithTitle:(nullable NSString *)title delegate:(nullable id<XLPhotoBrowserDelegate>)delegate cancelButtonTitle:(nullable NSString *)cancelButtonTitle deleteButtonTitle:(nullable NSString *)deleteButtonTitle otherButtonTitles:(nullable NSString *)otherButtonTitle, ... NS_REQUIRES_NIL_TERMINATION;
-
 /**
  *  保存当前展示的图片
  */
 - (void)saveCurrentShowImage;
+
+#pragma mark    ----------------------
+#pragma mark    XLPhotoBrowser简易使用方式:一行代码展示
+
+/**
+ 一行代码展示(在某些使用场景,不需要做很复杂的操作,例如不需要长按弹出actionSheet,从而不需要实现数据源方法和代理方法,那么可以选择这个方法,直接传数据源数组进来,框架内部做处理)
+
+ @param images            图片数据源数组(数组内部可以是UIImage/NSURL网络图片地址/ALAsset,但只能是其中一种)
+ @param currentImageIndex 展示第几张,从0开始
+
+ @return XLPhotoBrowser实例对象
+ */
++ (instancetype)showPhotoBrowserWithImages:(NSArray *)images currentImageIndex:(NSInteger)currentImageIndex;
 
 @end

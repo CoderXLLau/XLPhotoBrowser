@@ -18,19 +18,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    UIButton *button = [[UIButton alloc] init];
-    [button setTitle:@"清除图片缓存" forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(clearImageCache) forControlEvents:UIControlEventTouchUpInside];
-    button.frame = CGRectMake(0, 0, 120, 40);
-    [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-}
-
-- (void)clearImageCache
-{
-    [[SDImageCache sharedImageCache] clearDisk];
-    [[SDImageCache sharedImageCache] clearMemory];
 }
 
 /**
@@ -52,18 +39,18 @@
 }
 
 #pragma mark    -   XLPhotoBrowserDatasource
-///**
-// *  数据源方法
-// */
-//- (UIImage *)photoBrowser:(XLPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index
-//{
-//    return self.images[index];
-//}
+/**
+ *  数据源方法
+ */
+- (UIImage *)photoBrowser:(XLPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index
+{
+    return self.images[index];
+}
 
-//- (UIView *)photoBrowser:(XLPhotoBrowser *)browser sourceImageViewForIndex:(NSInteger)index
-//{
-//    return self.scrollView.subviews[index];
-//}
+- (UIView *)photoBrowser:(XLPhotoBrowser *)browser sourceImageViewForIndex:(NSInteger)index
+{
+    return self.scrollView.subviews[index];
+}
 
 - (NSURL *)photoBrowser:(XLPhotoBrowser *)browser highQualityImageURLForIndex:(NSInteger)index
 {
