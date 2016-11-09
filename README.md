@@ -5,11 +5,12 @@
 * 类似微信图片浏览样式XLPhotoBrowserStylePageControl , 底部有个pagecontrol显示图片索引
 * 类似微博图片浏览样式XLPhotoBrowserStyleIndexLabel , 上面有个UILabel显示图片索引
 * 简单样式XLPhotoBrowserStyleSimple , 上面有UILabel显示图片索引,左下部分有个保存按钮,可以保存当前图片
-![XLPhotoBrowserStylePageControl](http://upload-images.jianshu.io/upload_images/1455933-b4c2ca579f5c3d27.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)![XLPhotoBrowserStyleIndexLabel](http://upload-images.jianshu.io/upload_images/1455933-f10cad7f73406736.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)![XLPhotoBrowserStyleSimple](http://upload-images.jianshu.io/upload_images/1455933-fa237c8791989f48.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+![首页](http://upload-images.jianshu.io/upload_images/1455933-a62df375111ab953.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)![XLPhotoBrowserStylePageControl](http://upload-images.jianshu.io/upload_images/1455933-b07d243342f25e77.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)![XLPhotoBrowserStyleIndexLabel](http://upload-images.jianshu.io/upload_images/1455933-2800147a8423a6e2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)![XLPhotoBrowserStyleSimple](http://upload-images.jianshu.io/upload_images/1455933-7acc97cad1d5e72d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 
 ### 支持长按手势弹出多功能选择框,类似微博微信中的效果
-![长按图片弹出多功能选择框](http://upload-images.jianshu.io/upload_images/1455933-bc81256242046faf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
+![长按图片弹出多功能选择框](http://upload-images.jianshu.io/upload_images/1455933-13cc70c17b279ace.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ###	其他效果图:
   
 ![XLPhotoBrowserDemo.gif](http://upload-images.jianshu.io/upload_images/1455933-597296ec3f5594a0.gif?imageMogr2/auto-orient/strip)![XLPhotoBrowserDemo2.gif](http://upload-images.jianshu.io/upload_images/1455933-1b3f77d0f122d42e.gif?imageMogr2/auto-orient/strip)
