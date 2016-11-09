@@ -39,19 +39,42 @@
 }
 
 #pragma mark    -   XLPhotoBrowserDatasource
+
 /**
- *  数据源方法
+ *  返回这个位置的占位图片 , 也可以是原图(如果不实现此方法,会默认使用placeholderImage)
+ *
+ *  @param browser 浏览器
+ *  @param index   位置索引
+ *
+ *  @return 占位图片
  */
 - (UIImage *)photoBrowser:(XLPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index
 {
     return self.images[index];
 }
 
+/**
+ *  返回指定位置图片的UIImageView,用于做图片浏览器弹出放大和消失回缩动画等
+ *  如果没有实现这个方法,没有回缩动画,如果传过来的view不正确,可能会影响回缩动画效果
+ *
+ *  @param browser 浏览器
+ *  @param index   位置索引
+ *
+ *  @return 展示图片的容器视图,如UIImageView等
+ */
 - (UIView *)photoBrowser:(XLPhotoBrowser *)browser sourceImageViewForIndex:(NSInteger)index
 {
     return self.scrollView.subviews[index];
 }
 
+/**
+ *  返回指定位置的高清图片URL
+ *
+ *  @param browser 浏览器
+ *  @param index   位置索引
+ *
+ *  @return 返回高清大图索引
+ */
 - (NSURL *)photoBrowser:(XLPhotoBrowser *)browser highQualityImageURLForIndex:(NSInteger)index
 {
     return [NSURL URLWithString:self.urlStrings[index]];
@@ -82,7 +105,6 @@
         }
             break;
     }
-    
 }
 
 @end

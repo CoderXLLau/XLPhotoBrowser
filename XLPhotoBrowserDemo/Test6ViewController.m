@@ -22,7 +22,7 @@
 - (void)clickImage:(UITapGestureRecognizer *)tap
 {
     // 传入图片数据源,直接进行图片浏览
-    // 传入图片数据源数组 : 是UIImage对象数组 ,ALAsset对象也可以, 也可以是图片的NSURL链接 , 或者是可以变成NSURL链接的NSString对象数组
+    // 传入图片数据源数组self.images 可以是UIImage对象数组 ,可以是ALAsset对象, 也可以是图片的NSURL链接 , 或者是可以变成NSURL链接的NSString对象数组
     
     // 1.UIImage数组
 //    [XLPhotoBrowser showPhotoBrowserWithImages:self.images currentImageIndex:0];

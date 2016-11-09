@@ -81,7 +81,7 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
 
 @optional
 /**
- *  返回这个位置的占位图片 , 也可以是原图(如果不实现此方法,框架内部会默认生成并使用一张灰色的图片)
+ *  返回这个位置的占位图片 , 也可以是原图(如果不实现此方法,会默认使用placeholderImage)
  *
  *  @param browser 浏览器
  *  @param index   位置索引
@@ -91,7 +91,7 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
 - (UIImage *)photoBrowser:(XLPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index;
 
 /**
- *  返回指定位置的大图URL
+ *  返回指定位置的高清图片URL
  *
  *  @param browser 浏览器
  *  @param index   位置索引
@@ -149,7 +149,7 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
 @property (nonatomic , assign) XLPhotoBrowserStyle browserStyle;
 /**
  *  占位图片,可选(默认是一张灰色的100*100像素图片) 
- *  当没有实现数据源中placeholderImageForIndex方法时,默认会使用这个
+ *  当没有实现数据源中placeholderImageForIndex方法时,默认会使用这个占位图片
  */
 @property(nonatomic, strong) UIImage *placeholderImage;
 
@@ -195,17 +195,6 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
 #pragma mark    XLPhotoBrowser控制接口
 
 /**
- *  快速创建并进入图片浏览器 , 同时传入数据源对象和代理对象
- *
- *  @param currentImageIndex 开始展示的图片索引
- *  @param imageCount        图片数量
- *  @param datasource        数据源
- *  @param delegate          代理
- *
- */
-+ (instancetype)showPhotoBrowserWithCurrentImageIndex:(NSInteger)currentImageIndex imageCount:(NSUInteger)imageCount datasource:(id<XLPhotoBrowserDatasource>)datasource delegate:(id<XLPhotoBrowserDelegate>)delegate;
-
-/**
  *  快速创建并进入图片浏览器 , 同时传入数据源对象
  *
  *  @param currentImageIndex 开始展示的图片索引
@@ -234,7 +223,7 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
  *  @param deleteButtonTitle      删除按钮文字,如果为nil,不显示删除按钮
  *  @param otherButtonTitles      其他按钮数组
  */
-- (void)setActionSheetWithTitle:(nullable NSString *)title delegate:(nullable id<XLPhotoBrowserDelegate>)delegate cancelButtonTitle:(nullable NSString *)cancelButtonTitle deleteButtonTitle:(nullable NSString *)deleteButtonTitle otherButtonTitles:(nullable NSString *)otherButtonTitle, ... NS_REQUIRES_NIL_TERMINATION;
+- (void)setActionSheetWithTitle:(NSString *)title delegate:(id<XLPhotoBrowserDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle deleteButtonTitle:( NSString *)deleteButtonTitle otherButtonTitles:( NSString *)otherButtonTitle, ... NS_REQUIRES_NIL_TERMINATION;
 /**
  *  保存当前展示的图片
  */

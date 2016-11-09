@@ -154,10 +154,10 @@
     return self.photoImageView;
 }
 
-//- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view
-//{
-//    self.scrollEnabled = YES;
-//}
+- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view
+{
+    self.scrollEnabled = YES;
+}
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
 {

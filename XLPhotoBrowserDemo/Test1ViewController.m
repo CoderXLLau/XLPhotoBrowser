@@ -99,16 +99,11 @@
     [picker dismissViewControllerAnimated:true completion:nil];
 }
 
+/**
+ 进入图片浏览器
+ */
 - (void)clickImage:(UITapGestureRecognizer *)tap
 {
-    // 1.用法一:
-//    XLPhotoBrowser *browser = [[XLPhotoBrowser alloc] init];
-//    browser.imageCount = self.images.count;
-//    browser.currentImageIndex = tap.view.tag;
-//    browser.datasource = self;
-//    [browser show];
-    
-    // 2.用法二:
     [XLPhotoBrowser showPhotoBrowserWithCurrentImageIndex:tap.view.tag imageCount:self.images.count datasource:self];
 }
 

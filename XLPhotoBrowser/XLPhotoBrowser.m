@@ -772,29 +772,13 @@
     }
     UIPageControl *pageControl = (UIPageControl *)self.pageControl;
     pageControl.currentPage = self.currentImageIndex;
-    NSString *title = [NSString stringWithFormat:@"%lu / %lu",self.currentImageIndex+1,(unsigned long)self.imageCount];
+    NSString *title = [NSString stringWithFormat:@"%zd / %zd",self.currentImageIndex+1,self.imageCount];
     self.indexLabel.text = title;
     
     [self setUpBrowserStyle];
 }
 
 #pragma mark    -   public method
-
-/**
- *  快速创建并进入图片浏览器
- *
- *  @param currentImageIndex 开始展示的图片索引
- *  @param imageCount        图片数量
- *  @param datasource        数据源
- *  @param delegate          代理
- *
- */
-+ (instancetype)showPhotoBrowserWithCurrentImageIndex:(NSInteger)currentImageIndex imageCount:(NSUInteger)imageCount datasource:(id<XLPhotoBrowserDatasource>)datasource delegate:(id<XLPhotoBrowserDelegate>)delegate
-{
-    XLPhotoBrowser *browser = [self showPhotoBrowserWithCurrentImageIndex:currentImageIndex imageCount:imageCount datasource:datasource];
-    browser.delegate = delegate;
-    return browser;
-}
 
 /**
  *  快速创建并进入图片浏览器

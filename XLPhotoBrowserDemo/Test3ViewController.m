@@ -20,24 +20,13 @@
  */
 - (void)clickImage:(UITapGestureRecognizer *)tap
 {
-    XLPhotoBrowser *browser = [XLPhotoBrowser showPhotoBrowserWithCurrentImageIndex:tap.view.tag imageCount:self.images.count datasource:self];
-    browser.browserStyle = XLPhotoBrowserStyleIndexLabel;
+    XLPhotoBrowser *browser = [XLPhotoBrowser showPhotoBrowserWithImages:self.images currentImageIndex:tap.view.tag];
+    browser.browserStyle = XLPhotoBrowserStyleIndexLabel; // 微博样式
     
     // 设置长按手势弹出的地步ActionSheet数据,不实现此方法则没有长按手势
     [browser setActionSheetWithTitle:@"这是一个类似微信/微博的图片浏览器组件" delegate:self cancelButtonTitle:nil deleteButtonTitle:@"删除" otherButtonTitles:@"发送给朋友",@"保存图片",@"收藏",@"投诉",nil];
 }
 
-#pragma mark    -   XLPhotoBrowserDatasource
-
-- (UIImage *)photoBrowser:(XLPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index
-{
-    return self.images[index];
-}
-
-- (UIView *)photoBrowser:(XLPhotoBrowser *)browser sourceImageViewForIndex:(NSInteger)index
-{
-    return self.scrollView.subviews[index];
-}
 
 #pragma mark    -   XLPhotoBrowserDelegate
 

@@ -22,26 +22,23 @@
     // 设置长按手势弹出的地步ActionSheet数据,不实现此方法则没有长按手势
     [browser setActionSheetWithTitle:@"这是一个类似微信/微博的图片浏览器组件" delegate:self cancelButtonTitle:nil deleteButtonTitle:@"删除" otherButtonTitles:@"发送给朋友",@"保存图片",@"收藏",@"投诉",nil];
     
-    // 自定义一些属性
-//    browser.pageDotColor = [UIColor purpleColor]; ///< 此属性针对动画样式的pagecontrol无效
-//    browser.currentPageDotColor = [UIColor greenColor];
-//    browser.pageControlStyle = XLPhotoBrowserPageControlStyleAnimated;///< 修改底部pagecontrol的样式为系统样式,默认是弹性动画的样式
-    browser.pageControlStyle = XLPhotoBrowserPageControlStyleClassic; // 采用系统的分页样式
+    // 自定义pageControl的一些属性
+    browser.pageDotColor = [UIColor purpleColor]; ///< 此属性针对动画样式的pagecontrol无效
+    browser.currentPageDotColor = [UIColor greenColor];
+    browser.pageControlStyle = XLPhotoBrowserPageControlStyleClassic;///< 修改底部pagecontrol的样式为系统样式,默认是弹性动画的样式
 }
 
 #pragma mark    -   XLPhotoBrowserDatasource
-/**
- *  数据源方法
- */
+
 - (UIImage *)photoBrowser:(XLPhotoBrowser *)browser placeholderImageForIndex:(NSInteger)index
 {
     return self.images[index];
 }
 
-//- (UIView *)photoBrowser:(XLPhotoBrowser *)browser sourceImageViewForIndex:(NSInteger)index
-//{
-//    return self.scrollView.subviews[index];
-//}
+- (UIView *)photoBrowser:(XLPhotoBrowser *)browser sourceImageViewForIndex:(NSInteger)index
+{
+    return self.scrollView.subviews[index];
+}
 
 #pragma mark    -   XLPhotoBrowserDelegate
 
