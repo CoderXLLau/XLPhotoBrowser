@@ -28,6 +28,9 @@
 {
     _progress = progress;
     self.progressView.progress = progress;
+    if ([self.zoomingScrollViewdelegate respondsToSelector:@selector(zoomingScrollView:imageLoadProgress:)]) {
+        [self.zoomingScrollViewdelegate zoomingScrollView:self imageLoadProgress:progress];
+    }
 }
 
 - (UIImageView *)imageView
@@ -40,9 +43,6 @@
     return self.photoImageView.image;
 }
 
-/**
- *  懒加载成员属性
- */
 - (UIImageView *)photoImageView
 {
     if (_photoImageView == nil) {
@@ -246,6 +246,7 @@
     self.photoImageView.image = image;
     [self setMaxAndMinZoomScales];
     [self setNeedsLayout];
+    self.progress = 1.0;
 }
 
 /**
@@ -258,6 +259,7 @@
 {
     if (!url) {
         [self setShowImage:placeholder];
+        self.progress = 1.0f;
         return;
     }
     
@@ -266,6 +268,7 @@
         XLFormatLog(@"已经下载过图片,直接从缓存中获取");
         self.photoImageView.image = showImage;
         [self setMaxAndMinZoomScales];
+        self.progress = 1.0f;
         return;
     }
     
@@ -338,6 +341,7 @@
 - (void)prepareForReuse
 {
     [self setMaxAndMinZoomScales];
+    self.progress = 0;
     self.photoImageView.image = nil;
     self.hasLoadedImage = NO;
     [self.stateLabel removeFromSuperview];

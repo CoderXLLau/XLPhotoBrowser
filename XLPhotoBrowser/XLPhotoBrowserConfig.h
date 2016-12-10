@@ -30,6 +30,7 @@ typedef NS_ENUM(NSUInteger, XLProgressViewMode){
 #define XLPhotoBrowserSaveImageFailText @" >_< 保存失败 ";
 // 网络图片加载失败的提示文字
 #define XLPhotoBrowserLoadNetworkImageFail @">_< 图片加载失败"
+#define XLPhotoBrowserLoadingImageText @" >_< 图片加载中,请稍后 ";
 
 // browser背景颜色
 #define XLPhotoBrowserBackgrounColor [UIColor colorWithRed:0 green:0 blue:0 alpha:0.95]

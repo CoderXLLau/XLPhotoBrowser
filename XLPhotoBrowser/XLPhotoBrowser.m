@@ -25,6 +25,10 @@
  */
 @property (nonatomic , strong) UIActivityIndicatorView  *indicatorView;
 /**
+ *   保存图片的结果指示label
+ */
+@property (nonatomic , strong) UILabel *savaImageTipLabel;
+/**
  *  正在使用的XLZoomingScrollView对象集
  */
 @property (nonatomic , strong) NSMutableSet  *visibleZoomingScrollViews;
@@ -69,6 +73,27 @@
 
 #pragma mark    -   set / get
 
+- (UILabel *)savaImageTipLabel
+{
+    if (_savaImageTipLabel == nil) {
+        _savaImageTipLabel = [[UILabel alloc] init];
+        _savaImageTipLabel.textColor = [UIColor whiteColor];
+        _savaImageTipLabel.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:0.90f];
+        _savaImageTipLabel.textAlignment = NSTextAlignmentCenter;
+        _savaImageTipLabel.font = [UIFont boldSystemFontOfSize:17];
+    }
+    return _savaImageTipLabel;
+}
+
+- (UIActivityIndicatorView *)indicatorView
+{
+    if (!_indicatorView) {
+        _indicatorView = [[UIActivityIndicatorView alloc] init];
+        _indicatorView.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
+    }
+    return _indicatorView;
+}
+
 - (void)setBrowserStyle:(XLPhotoBrowserStyle)browserStyle
 {
     _browserStyle = browserStyle;
@@ -96,7 +121,6 @@
 - (void)setPageDotColor:(UIColor *)pageDotColor
 {
     _pageDotColor = pageDotColor;
-    
     if ([self.pageDotColor isKindOfClass:[UIPageControl class]]) {
         UIPageControl *pageControl = (UIPageControl *)_pageControl;
         pageControl.pageIndicatorTintColor = pageDotColor;
@@ -106,21 +130,18 @@
 - (void)setCurrentPageDotImage:(UIImage *)currentPageDotImage
 {
     _currentPageDotImage = currentPageDotImage;
-    
     [self setCustomPageControlDotImage:currentPageDotImage isCurrentPageDot:YES];
 }
 
 - (void)setPageDotImage:(UIImage *)pageDotImage
 {
     _pageDotImage = pageDotImage;
-    
     [self setCustomPageControlDotImage:pageDotImage isCurrentPageDot:NO];
 }
 
 - (void)setCustomPageControlDotImage:(UIImage *)image isCurrentPageDot:(BOOL)isCurrentPageDot
 {
     if (!image || !self.pageControl) return;
-    
     if ([self.pageControl isKindOfClass:[TAPageControl class]]) {
         TAPageControl *pageControl = (TAPageControl *)_pageControl;
         if (isCurrentPageDot) {
@@ -141,7 +162,6 @@
 - (void)setPageControlStyle:(XLPhotoBrowserPageControlStyle)pageControlStyle
 {
     _pageControlStyle = pageControlStyle;
-    
     [self setUpPageControl];
 }
 
@@ -345,6 +365,20 @@
     [self.visibleZoomingScrollViews removeAllObjects];
 }
 
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    _savaImageTipLabel.layer.cornerRadius = 5;
+    _savaImageTipLabel.clipsToBounds = YES;
+    [_savaImageTipLabel sizeToFit];
+    _savaImageTipLabel.xl_height = 30;
+    _savaImageTipLabel.xl_width += 20;
+    _savaImageTipLabel.center = self.center;
+
+    _indicatorView.center = self.center;
+}
+
 #pragma mark    -   private method
 
 - (UIWindow *)findTheMainWindow
@@ -366,93 +400,88 @@
 
 - (void)longPress:(UILongPressGestureRecognizer *)longPress
 {
+    XLZoomingScrollView *currentZoomingScrollView = [self zoomingScrollViewAtIndex:self.currentImageIndex];
     if (longPress.state == UIGestureRecognizerStateBegan) {
+        XLFormatLog(@"UIGestureRecognizerStateBegan , currentZoomingScrollView.progress %f",currentZoomingScrollView.progress);
+        if (currentZoomingScrollView.progress < 1.0) {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self longPress:longPress];
+            });
+            return;
+        }
+
         if (self.actionOtherButtonTitles.count <= 0 && self.actionSheetDeleteButtonTitle.length <= 0 && self.actionSheetTitle.length <= 0) {
             return;
         }
         FSActionSheet *actionSheet = [[FSActionSheet alloc] initWithTitle:self.actionSheetTitle delegate:nil cancelButtonTitle:self.actionSheetCancelTitle highlightedButtonTitle:self.actionSheetDeleteButtonTitle otherButtonTitles:self.actionOtherButtonTitles];
-        // 弱引用,防止循环引用
         __weak typeof(self) weakSelf = self;
         // 展示并绑定选择回调
         [actionSheet showWithSelectedCompletion:^(NSInteger selectedIndex) {
             if (weakSelf.delegate && [weakSelf.delegate respondsToSelector:@selector(photoBrowser:clickActionSheetIndex:currentImageIndex:)]) {
                 [weakSelf.delegate photoBrowser:weakSelf clickActionSheetIndex:selectedIndex currentImageIndex:weakSelf.currentImageIndex];
             }
-            if (selectedIndex == weakSelf.actionOtherButtonTitles.count) {
-                // 点击了删除按钮
-                [weakSelf delete];
-            }
         }];
     }
 }
 
-- (void)delete
-{
-    if (self.currentImageIndex == 0) {
-        XLZoomingScrollView *currentZoomingScrollView = [self zoomingScrollViewAtIndex:self.currentImageIndex];
-        [self.reusableZoomingScrollViews addObject:currentZoomingScrollView];
-        [currentZoomingScrollView prepareForReuse];
-        [currentZoomingScrollView removeFromSuperview];
-        [self.visibleZoomingScrollViews minusSet:self.reusableZoomingScrollViews];
-    }
-    self.currentImageIndex --;
-    self.imageCount --;
-    if (self.currentImageIndex == -1 && self.imageCount == 0) {
-        [self dismiss];
-    } else {
-        self.currentImageIndex = (self.currentImageIndex == (-1) ? 0 : self.currentImageIndex);
-        if (self.currentImageIndex == 0) {
-            [self setUpImageForZoomingScrollViewAtIndex:0];
-            [self updatePageControlIndex];
-            [self showPhotos];
-        }
-        
-        self.scrollView.contentSize = CGSizeMake((self.scrollView.frame.size.width) * self.imageCount, 0);
-        self.scrollView.contentOffset = CGPointMake(self.currentImageIndex * (self.scrollView.frame.size.width), 0);
-    }
-    UIPageControl *pageControl = (UIPageControl *)self.pageControl;
-    pageControl.numberOfPages = self.imageCount;
-    [self updatePageControlIndex];
-}
+/**
+ 具体的删除逻辑,请根据自己项目的实际情况,自行处理
+ */
+//- (void)delete
+//{
+//    if (self.currentImageIndex == 0) {
+//        XLZoomingScrollView *currentZoomingScrollView = [self zoomingScrollViewAtIndex:self.currentImageIndex];
+//        [self.reusableZoomingScrollViews addObject:currentZoomingScrollView];
+//        [currentZoomingScrollView prepareForReuse];
+//        [currentZoomingScrollView removeFromSuperview];
+//        [self.visibleZoomingScrollViews minusSet:self.reusableZoomingScrollViews];
+//    }
+//    self.currentImageIndex --;
+//    self.imageCount --;
+//    if (self.currentImageIndex == -1 && self.imageCount == 0) {
+//        [self dismiss];
+//    } else {
+//        self.currentImageIndex = (self.currentImageIndex == (-1) ? 0 : self.currentImageIndex);
+//        if (self.currentImageIndex == 0) {
+//            [self setUpImageForZoomingScrollViewAtIndex:0];
+//            [self updatePageControlIndex];
+//            [self showPhotos];
+//        }
+//        
+//        self.scrollView.contentSize = CGSizeMake((self.scrollView.frame.size.width) * self.imageCount, 0);
+//        self.scrollView.contentOffset = CGPointMake(self.currentImageIndex * (self.scrollView.frame.size.width), 0);
+//    }
+//    UIPageControl *pageControl = (UIPageControl *)self.pageControl;
+//    pageControl.numberOfPages = self.imageCount;
+//    [self updatePageControlIndex];
+//}
 
 #pragma mark    -   private -- save image
 
 - (void)saveImage
 {
-    int index = self.scrollView.contentOffset.x / self.scrollView.bounds.size.width;
-    XLZoomingScrollView *zoomingScrollView = [self zoomingScrollViewAtIndex:index];
-    
+    XLZoomingScrollView *zoomingScrollView = [self zoomingScrollViewAtIndex:self.currentImageIndex];
+    if (zoomingScrollView.progress < 1.0) {
+        self.savaImageTipLabel.text = XLPhotoBrowserLoadingImageText;
+        [self addSubview:self.savaImageTipLabel];
+        [self.savaImageTipLabel performSelector:@selector(removeFromSuperview) withObject:nil afterDelay:1.0];
+        return;
+    }
     UIImageWriteToSavedPhotosAlbum(zoomingScrollView.currentImage, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
-
-    UIActivityIndicatorView *indicator = [[UIActivityIndicatorView alloc] init];
-    indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleWhiteLarge;
-    indicator.center = self.center;
-    self.indicatorView = indicator;
-    [[UIApplication sharedApplication].keyWindow addSubview:indicator];
-    [indicator startAnimating];
+    [self addSubview:self.indicatorView];
+    [self.indicatorView startAnimating];
 }
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo;
 {
     [self.indicatorView removeFromSuperview];
-    
-    UILabel *label = [[UILabel alloc] init];
-    label.textColor = [UIColor whiteColor];
-    label.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:0.90f];
-    label.layer.cornerRadius = 5;
-    label.clipsToBounds = YES;
-    label.bounds = CGRectMake(0, 0, 150, 30);
-    label.center = self.center;
-    label.textAlignment = NSTextAlignmentCenter;
-    label.font = [UIFont boldSystemFontOfSize:17];
-    [[UIApplication sharedApplication].keyWindow addSubview:label];
-    [[UIApplication sharedApplication].keyWindow bringSubviewToFront:label];
+    [self addSubview:self.savaImageTipLabel];
     if (error) {
-        label.text = XLPhotoBrowserSaveImageFailText;
+        self.savaImageTipLabel.text = XLPhotoBrowserSaveImageFailText;
     } else {
-        label.text = XLPhotoBrowserSaveImageSuccessText;
+        self.savaImageTipLabel.text = XLPhotoBrowserSaveImageSuccessText;
     }
-    [label performSelector:@selector(removeFromSuperview) withObject:nil afterDelay:1.0];
+    [self.savaImageTipLabel performSelector:@selector(removeFromSuperview) withObject:nil afterDelay:1.0];
 }
 
 #pragma mark    -   private ---loadimage
@@ -714,6 +743,13 @@
  */
 - (void)zoomingScrollView:(XLZoomingScrollView *)zoomingScrollView singleTapDetected:(UITapGestureRecognizer *)singleTap
 {
+    [UIView animateWithDuration:0.15 animations:^{
+        self.savaImageTipLabel.alpha = 0.0;
+        self.indicatorView.alpha = 0.0;
+    } completion:^(BOOL finished) {
+        [self.savaImageTipLabel removeFromSuperview];
+        [self.indicatorView removeFromSuperview];
+    }];
     NSInteger currentIndex = zoomingScrollView.tag - 100;
     UIView *sourceView = [self sourceImageViewForIndex:currentIndex];
     if (sourceView == nil) {

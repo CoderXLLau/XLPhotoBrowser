@@ -20,6 +20,13 @@
  *  @param touch             用户单击的UITouch对象
  */
 - (void)zoomingScrollView:(XLZoomingScrollView *)zoomingScrollView singleTapDetected:(UITapGestureRecognizer *)singleTap;
+/**
+ *  图片加载进度
+ *
+ *  @param zoomingScrollView 图片缩放视图
+ *  @param progress 加载进度 , 0 - 1.0
+ */
+- (void)zoomingScrollView:(XLZoomingScrollView *)zoomingScrollView imageLoadProgress:(CGFloat)progress;
 
 @end
 
