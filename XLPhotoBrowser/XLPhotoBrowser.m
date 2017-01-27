@@ -958,13 +958,14 @@
         return nil;
     }
     
-    Class imageClass = [images.firstObject class];
-    for (id image in images) {
-        if (![image isKindOfClass:imageClass]) {
-            XLPBLog(@"传入的数据源数组内对象类型不一致,暂不支持,请检查");
-            return nil;
-        }
-    }
+    //检查数据源对象是否一直，如有需要自行打开
+//    Class imageClass = [images.firstObject class];
+//    for (id image in images) {
+//        if (![image isKindOfClass:imageClass]) {
+//            XLPBLog(@"传入的数据源数组内对象类型不一致,暂不支持,请检查");
+//            return nil;
+//        }
+//    }
     
     XLPhotoBrowser *browser = [[XLPhotoBrowser alloc] init];
     browser.imageCount = images.count;
