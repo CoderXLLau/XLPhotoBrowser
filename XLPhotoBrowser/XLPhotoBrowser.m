@@ -388,12 +388,19 @@
         BOOL windowOnMainScreen = window.screen == UIScreen.mainScreen;
         BOOL windowIsVisible = !window.hidden && window.alpha > 0;
         BOOL windowLevelSupported = (window.windowLevel >= UIWindowLevelNormal);
-        
-        if(windowOnMainScreen && windowIsVisible && windowLevelSupported) {
+        BOOL windowSizeIsEqualToScreen = (window.xl_width == XLScreenW && window.xl_height == XLScreenH);
+        if(windowOnMainScreen && windowIsVisible && windowLevelSupported && windowSizeIsEqualToScreen) {
             return window;
         }
     }
-    return [[[UIApplication sharedApplication] delegate] window];
+    
+    XLPBLog(@"XLPhotoBrowser在当前工程未匹配到合适的window,请根据工程架构酌情调整此方法,匹配最优窗口");
+    if (XLPhotoBrowserDebug) {
+        NSAssert(false, @"XLPhotoBrowser在当前工程未匹配到window,请根据工程架构酌情调整findTheMainWindow方法,匹配最优窗口");
+    }
+    
+    UIWindow * delegateWindow = [[[UIApplication sharedApplication] delegate] window];
+    return delegateWindow;
 }
 
 #pragma mark    -   private -- 长按图片相关
@@ -402,7 +409,7 @@
 {
     XLZoomingScrollView *currentZoomingScrollView = [self zoomingScrollViewAtIndex:self.currentImageIndex];
     if (longPress.state == UIGestureRecognizerStateBegan) {
-        XLFormatLog(@"UIGestureRecognizerStateBegan , currentZoomingScrollView.progress %f",currentZoomingScrollView.progress);
+        XLPBLog(@"UIGestureRecognizerStateBegan , currentZoomingScrollView.progress %f",currentZoomingScrollView.progress);
         if (currentZoomingScrollView.progress < 1.0) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self longPress:longPress];
@@ -713,6 +720,20 @@
     
     CGRect targetRect; // 目标frame
     UIImage *image = self.sourceImageView.image;
+    
+#warning 完善image为空的闪退
+    if (image == nil) {
+        ///objc[1903]: Class PLBuildVersion is implemented in both /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/PrivateFrameworks/AssetsLibraryServices.framework/AssetsLibraryServices (0x1110ec998) and /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/PrivateFrameworks/PhotoLibraryServices.framework/PhotoLibraryServices (0x110e6b880). One of the two will be used. Which one is undefined.
+        //(lldb)  po tempView.frame
+//        (origin = (x = 15, y = 100), size = (width = 100, height = 100))
+//        
+//        (lldb) po targetRect
+//        (origin = (x = 0, y = NaN), size = (width = 414, height = NaN))
+        
+
+        XLPBLog(@"需要提供源视图才能做弹出/退出图片浏览器的缩放动画");
+        return;
+    }
     CGFloat imageWidthHeightRatio = image.size.width / image.size.height;
     CGFloat width = XLScreenW;
     CGFloat height = XLScreenW / imageWidthHeightRatio;

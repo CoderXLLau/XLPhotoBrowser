@@ -36,7 +36,7 @@
 //    [XLPhotoBrowser showPhotoBrowserWithImages:URLArray currentImageIndex:0];
     
     // 3.可以变成NSURL链接的NSString对象数组
-    [XLPhotoBrowser showPhotoBrowserWithImages:self.urlStrings currentImageIndex:0];
+    [XLPhotoBrowser showPhotoBrowserWithImages:self.images currentImageIndex:0];
     
 }
 

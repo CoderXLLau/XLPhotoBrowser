@@ -8,7 +8,9 @@
 
 #import "UIView+XLExtension.h"
 #import "UIImage+XLExtension.h"
-//#define XLPhotoBrowserDebug 1
+#define XLPhotoBrowserDebug 1
+//是否开启断言调试模式
+#define IsOpenAssertDebug 1
 
 /**
  *  进度视图类型类型
