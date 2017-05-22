@@ -15,15 +15,15 @@ typedef void(^FSActionSheetHandler)(NSInteger selectedIndex);
 
 // 选项类型枚举
 typedef NS_ENUM(NSInteger, FSActionSheetType) {
-    FSActionSheetTypeNormal = 0,
-    FSActionSheetTypeHighlighted,
+    FSActionSheetTypeNormal = 0,    // 正常状态
+    FSActionSheetTypeHighlighted,   // 高亮状态
 };
 
 // 内容偏移枚举
 typedef NS_ENUM(NSInteger, FSContentAlignment) {
-    FSContentAlignmentLeft = 0, ///< 内容紧靠左边
-    FSContentAlignmentCenter, ///< 内容居中
-    FSContentAlignmentRight, ///< 内容紧靠右边
+    FSContentAlignmentLeft = 0,     // 内容紧靠左边
+    FSContentAlignmentCenter,       // 内容居中
+    FSContentAlignmentRight,        // 内容紧靠右边
 };
 
 
@@ -44,11 +44,10 @@ UIKIT_EXTERN NSString * const FSActionSheetRowTopLineColor; ///< 单元格顶部
 UIKIT_EXTERN NSString * const FSActionSheetItemNormalColor; ///< 选项默认颜色, default is #000000
 UIKIT_EXTERN NSString * const FSActionSheetItemHighlightedColor; ///< 选项高亮颜色, default is #E64340
 
-/*! @author Steven
- *  @brief 获取颜色
+/*! @brief 将十六进制颜色值字符串转化为对应颜色
  *  @param aColorString 十六进制颜色字符串
  */
-NS_INLINE UIColor *FSColorWithString(NSString *aColorString) {
+NS_INLINE UIColor *FSActionSheetColorWithString(NSString *aColorString) {
     if (aColorString.length == 0) {
         return nil;
     }

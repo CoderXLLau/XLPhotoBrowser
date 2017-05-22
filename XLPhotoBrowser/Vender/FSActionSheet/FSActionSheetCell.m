@@ -22,7 +22,7 @@
     [super setHighlighted:highlighted animated:animated];
     
     if (highlighted) {
-        self.contentView.backgroundColor = FSColorWithString(FSActionSheetRowHighlightedColor);
+        self.contentView.backgroundColor = FSActionSheetColorWithString(FSActionSheetRowHighlightedColor);
     } else {
         [UIView animateWithDuration:0.25 animations:^{
             self.contentView.backgroundColor = self.backgroundColor;
@@ -33,7 +33,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (!(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) return nil;
     
-    self.backgroundColor = FSColorWithString(FSActionSheetRowNormalColor);
+    self.backgroundColor = FSActionSheetColorWithString(FSActionSheetRowNormalColor);
     self.contentView.backgroundColor = self.backgroundColor;
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     _contentAlignment = FSContentAlignmentCenter;
@@ -45,7 +45,7 @@
 
 - (void)setupSubviews {
     _titleButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    _titleButton.tintColor = FSColorWithString(FSActionSheetItemNormalColor);
+    _titleButton.tintColor = FSActionSheetColorWithString(FSActionSheetItemNormalColor);
     _titleButton.titleLabel.font = [UIFont systemFontOfSize:FSActionSheetItemTitleFontSize];
     _titleButton.userInteractionEnabled = NO;
     _titleButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -55,7 +55,7 @@
     
     // 顶部线条
     UIView *topLine = [[UIView alloc] init];
-    topLine.backgroundColor = FSColorWithString(FSActionSheetRowTopLineColor);
+    topLine.backgroundColor = FSActionSheetColorWithString(FSActionSheetRowTopLineColor);
     topLine.translatesAutoresizingMaskIntoConstraints = NO;
     [self.contentView addSubview:topLine];
     self.topLine = topLine;
@@ -73,9 +73,9 @@
         tintColor = item.tintColor;
     } else {
         if (_item.type == FSActionSheetTypeNormal) {
-            tintColor = FSColorWithString(FSActionSheetItemNormalColor);
+            tintColor = FSActionSheetColorWithString(FSActionSheetItemNormalColor);
         } else {
-            tintColor = FSColorWithString(FSActionSheetItemHighlightedColor);
+            tintColor = FSActionSheetColorWithString(FSActionSheetItemHighlightedColor);
         }
     }
     _titleButton.tintColor = tintColor;
