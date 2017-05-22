@@ -96,6 +96,7 @@
 		53B7A6BF1D3E14E700453C8A /* XLProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XLProgressView.m; sourceTree = "<group>"; };
 		53B7A6C01D3E14E700453C8A /* XLZoomingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XLZoomingScrollView.h; sourceTree = "<group>"; };
 		53B7A6C11D3E14E700453C8A /* XLZoomingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XLZoomingScrollView.m; sourceTree = "<group>"; };
+		76D3CB371ED2DA21007472F3 /* XLPhotoBrowserTypeDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XLPhotoBrowserTypeDefine.h; sourceTree = "<group>"; };
 		84BBA3CE16CB284BED37DEEA /* Pods-XLPhotoBrowserDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XLPhotoBrowserDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-XLPhotoBrowserDemo/Pods-XLPhotoBrowserDemo.release.xcconfig"; sourceTree = "<group>"; };
 		F7A599F3A5609494D4D0D012 /* Pods-XLPhotoBrowserDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-XLPhotoBrowserDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-XLPhotoBrowserDemo/Pods-XLPhotoBrowserDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -194,6 +195,7 @@
 				53B7A6BF1D3E14E700453C8A /* XLProgressView.m */,
 				53B7A6C01D3E14E700453C8A /* XLZoomingScrollView.h */,
 				53B7A6C11D3E14E700453C8A /* XLZoomingScrollView.m */,
+				76D3CB371ED2DA21007472F3 /* XLPhotoBrowserTypeDefine.h */,
 			);
 			path = XLPhotoBrowser;
 			sourceTree = "<group>";

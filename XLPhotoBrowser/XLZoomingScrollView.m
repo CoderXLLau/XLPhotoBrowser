@@ -215,7 +215,6 @@
 - (void)doubleTapBackgroundView:(UITapGestureRecognizer *)doubleTap
 {
 #warning TODO 需要再优化这里的算法
-
     self.userInteractionEnabled = NO;
     CGPoint point = [doubleTap locationInView:doubleTap.view];
     CGFloat touchX = point.x;
