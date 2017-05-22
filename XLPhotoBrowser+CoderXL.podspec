@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name         = 'XLPhotoBrowser'
-    s.version      = '0.9.9'
+    s.version      = '1.0.0'
     s.summary      = 'An easy way to borwser photoes'
     s.homepage     = 'https://github.com/Shannoon/XLPhotoBrowser'
     s.license      = 'MIT'
@@ -9,6 +9,7 @@ Pod::Spec.new do |s|
     s.source       = {:git => 'https://github.com/Shannoon/XLPhotoBrowser.git', :tag => s.version}
     s.source_files = 'XLPhotoBrowser/**/*.{h,m}'
     s.framework    = 'UIKit'
+    s.dependency 'SDWebImage', '~> 4.0.0'
     s.requires_arc = true
 end
 
