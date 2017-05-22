@@ -7,7 +7,7 @@
 //
 
 #import "BaseTestViewController.h"
-#import "SDImageCache.h"
+#import <SDImageCache.h>
 
 @interface BaseTestViewController ()
 
@@ -75,7 +75,7 @@
 
 - (void)clearImageCache
 {
-    [[SDImageCache sharedImageCache] clearDisk];
+    [[SDImageCache sharedImageCache] clearDiskOnCompletion:nil];
     [[SDImageCache sharedImageCache] clearMemory];
 }
 - (void)resetScrollView

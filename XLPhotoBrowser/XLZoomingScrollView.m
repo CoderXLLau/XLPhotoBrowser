@@ -9,7 +9,6 @@
 #import "XLZoomingScrollView.h"
 #import "XLProgressView.h"
 
-#import "UIImageView+WebCache.h"
 #import "SDImageCache.h"
 
 @interface XLZoomingScrollView () <UIScrollViewDelegate>
@@ -281,7 +280,7 @@
     [self addSubview:self.progressView];;
     self.progressView.mode = XLProgressViewProgressMode;
 
-    [weakSelf.photoImageView sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed| SDWebImageLowPriority| SDWebImageHandleCookies progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+    [weakSelf.photoImageView sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed| SDWebImageLowPriority| SDWebImageHandleCookies progress:^(NSInteger receivedSize, NSInteger expectedSize,NSURL * _Nullable targetURL) {
         if (expectedSize>0) {
             // 修改进度
             weakSelf.progress = (CGFloat)receivedSize / expectedSize ;

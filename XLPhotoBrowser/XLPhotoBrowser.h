@@ -221,7 +221,7 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
  *  @param delegate               XLPhotoBrowserDelegate
  *  @param cancelButtonTitle      取消按钮文字
  *  @param deleteButtonTitle      删除按钮文字,如果为nil,不显示删除按钮
- *  @param otherButtonTitles      其他按钮数组
+ *  @param otherButtonTitle    其他按钮数组
  */
 - (void)setActionSheetWithTitle:(NSString *)title delegate:(id<XLPhotoBrowserDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle deleteButtonTitle:( NSString *)deleteButtonTitle otherButtonTitles:( NSString *)otherButtonTitle, ... NS_REQUIRES_NIL_TERMINATION;
 /**

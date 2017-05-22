@@ -8,6 +8,7 @@
 
 #import "UIView+XLExtension.h"
 #import "UIImage+XLExtension.h"
+#import <UIImageView+WebCache.h>
 #define XLPhotoBrowserDebug 1
 //是否开启断言调试模式
 #define IsOpenAssertDebug 1
