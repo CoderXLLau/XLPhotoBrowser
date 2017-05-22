@@ -8,6 +8,7 @@ Pod::Spec.new do |s|
     s.platform     = :ios, '7.0'
     s.source       = {:git => 'https://github.com/Shannoon/XLPhotoBrowser.git', :tag => s.version}
     s.source_files = 'XLPhotoBrowser/**/*.{h,m}'
+    s.framework    = 'UIKit'
     s.requires_arc = true
 end
 

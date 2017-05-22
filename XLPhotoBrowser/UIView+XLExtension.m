@@ -54,7 +54,7 @@ static char RedTipViewKey;
  *  @param redX  x坐标
  *  @param redY  y坐标
  *  @param width 圆点的直径
- *  @param color 圆点的颜色
+ *  @param backgroundColor 圆点的颜色
  */
 - (void)xl_showRedTipViewInRedX:(CGFloat)redX redY:(CGFloat)redY redTipViewWidth:(CGFloat)width backgroundColor:(UIColor *)backgroundColor
 {
