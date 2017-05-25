@@ -15,8 +15,16 @@
   
 ![XLPhotoBrowserDemo.gif](http://upload-images.jianshu.io/upload_images/1455933-597296ec3f5594a0.gif?imageMogr2/auto-orient/strip)![XLPhotoBrowserDemo2.gif](http://upload-images.jianshu.io/upload_images/1455933-1b3f77d0f122d42e.gif?imageMogr2/auto-orient/strip)
 
+
 ##2. 安装方法
 *	下载示例Demo,把里面的XLPhotoBrowser文件夹拖到你的项目中即可(注意: 里面用到了一些第三方的类库,如果你的项目中已经使用了这些库,可以视情况删除)
+
+*   使用cocoapods自动安装
+
+```
+pod 'XLPhotoBrowser+CoderXL'
+
+```
 
 ## 3. 使用说明
 ### 3.1基本使用(提供2种传递数据的方法:图片以数组形式批量传递 和 数据源方法分开传递每一个位置的图片数据)
