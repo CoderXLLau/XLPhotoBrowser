@@ -16,6 +16,7 @@
 ![XLPhotoBrowserDemo.gif](http://upload-images.jianshu.io/upload_images/1455933-597296ec3f5594a0.gif?imageMogr2/auto-orient/strip)![XLPhotoBrowserDemo2.gif](http://upload-images.jianshu.io/upload_images/1455933-1b3f77d0f122d42e.gif?imageMogr2/auto-orient/strip)
 
 
+
 ##2. 安装方法
 #### 2.1 第一种方法:  使用cocoapods自动安装
 
