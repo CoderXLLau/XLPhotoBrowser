@@ -8,15 +8,12 @@
 
 ![首页](http://upload-images.jianshu.io/upload_images/1455933-a62df375111ab953.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)![XLPhotoBrowserStylePageControl](http://upload-images.jianshu.io/upload_images/1455933-b07d243342f25e77.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)![XLPhotoBrowserStyleIndexLabel](http://upload-images.jianshu.io/upload_images/1455933-2800147a8423a6e2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)![XLPhotoBrowserStyleSimple](http://upload-images.jianshu.io/upload_images/1455933-7acc97cad1d5e72d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-
 ### 支持长按手势弹出多功能选择框,类似微博微信中的效果
 ![长按图片弹出多功能选择框](http://upload-images.jianshu.io/upload_images/1455933-13cc70c17b279ace.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ###	其他效果图:
 ![XLPhotoBrowserDemo.gif](http://upload-images.jianshu.io/upload_images/1455933-597296ec3f5594a0.gif?imageMogr2/auto-orient/strip)![XLPhotoBrowserDemo2.gif](http://upload-images.jianshu.io/upload_images/1455933-1b3f77d0f122d42e.gif?imageMogr2/auto-orient/strip)
 
-##
-
-##2. 安装方法
+## 2. 安装方法
 #### 2.1 第一种方法:  使用cocoapods自动安装
 
 ```
@@ -105,7 +102,7 @@ pod 'XLPhotoBrowser+CoderXL'
     return [NSURL URLWithString:self.urlStrings[index]];
 }
 ```
-####ps:下面的示例代码中如非必要,统一用第一种方式传递图片数组来展示
+#### ps:下面的示例代码中如非必要,统一用第一种方式传递图片数组来展示
 
 ### 3.2进阶使用说明(自定义多种属性等)
 
