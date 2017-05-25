@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
     s.license      = 'MIT'
     s.authors      = {'CoderXLLau' => '2604156181@qq.com'}
     s.platform     = :ios, '7.0'
-    s.source       = {:git => 'https://github.com/CoderXLLau/XLPhotoBrowser+CoderXL.git', :tag => s.version}
+    s.source       = {:git => 'https://github.com/CoderXLLau/XLPhotoBrowser.git', :tag => s.version}
     s.source_files = 'XLPhotoBrowser/**/*.{h,m}'
     s.framework    = 'UIKit'
     s.dependency 'SDWebImage', '~> 3.8'
