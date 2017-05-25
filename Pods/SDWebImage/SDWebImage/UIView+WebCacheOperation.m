@@ -7,19 +7,14 @@
  */
 
 #import "UIView+WebCacheOperation.h"
-
-#if SD_UIKIT || SD_MAC
-
 #import "objc/runtime.h"
 
 static char loadOperationKey;
 
-typedef NSMutableDictionary<NSString *, id> SDOperationsDictionary;
-
 @implementation UIView (WebCacheOperation)
 
-- (SDOperationsDictionary *)operationDictionary {
-    SDOperationsDictionary *operations = objc_getAssociatedObject(self, &loadOperationKey);
+- (NSMutableDictionary *)operationDictionary {
+    NSMutableDictionary *operations = objc_getAssociatedObject(self, &loadOperationKey);
     if (operations) {
         return operations;
     }
@@ -28,20 +23,16 @@ typedef NSMutableDictionary<NSString *, id> SDOperationsDictionary;
     return operations;
 }
 
-- (void)sd_setImageLoadOperation:(nullable id)operation forKey:(nullable NSString *)key {
-    if (key) {
-        [self sd_cancelImageLoadOperationWithKey:key];
-        if (operation) {
-            SDOperationsDictionary *operationDictionary = [self operationDictionary];
-            operationDictionary[key] = operation;
-        }
-    }
+- (void)sd_setImageLoadOperation:(id)operation forKey:(NSString *)key {
+    [self sd_cancelImageLoadOperationWithKey:key];
+    NSMutableDictionary *operationDictionary = [self operationDictionary];
+    [operationDictionary setObject:operation forKey:key];
 }
 
-- (void)sd_cancelImageLoadOperationWithKey:(nullable NSString *)key {
+- (void)sd_cancelImageLoadOperationWithKey:(NSString *)key {
     // Cancel in progress downloader from queue
-    SDOperationsDictionary *operationDictionary = [self operationDictionary];
-    id operations = operationDictionary[key];
+    NSMutableDictionary *operationDictionary = [self operationDictionary];
+    id operations = [operationDictionary objectForKey:key];
     if (operations) {
         if ([operations isKindOfClass:[NSArray class]]) {
             for (id <SDWebImageOperation> operation in operations) {
@@ -56,13 +47,9 @@ typedef NSMutableDictionary<NSString *, id> SDOperationsDictionary;
     }
 }
 
-- (void)sd_removeImageLoadOperationWithKey:(nullable NSString *)key {
-    if (key) {
-        SDOperationsDictionary *operationDictionary = [self operationDictionary];
-        [operationDictionary removeObjectForKey:key];
-    }
+- (void)sd_removeImageLoadOperationWithKey:(NSString *)key {
+    NSMutableDictionary *operationDictionary = [self operationDictionary];
+    [operationDictionary removeObjectForKey:key];
 }
 
 @end
-
-#endif

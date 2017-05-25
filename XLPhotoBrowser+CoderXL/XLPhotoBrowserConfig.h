@@ -8,7 +8,7 @@
 
 #import "UIView+XLExtension.h"
 #import "UIImage+XLExtension.h"
-#import <UIImageView+WebCache.h>
+#import <SDWebImage/UIImageView+WebCache.h>
 #import "XLPhotoBrowserTypeDefine.h"
 
 #define XLPhotoBrowserDebug 1
