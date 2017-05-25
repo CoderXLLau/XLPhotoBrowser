@@ -214,7 +214,7 @@
 
 - (void)doubleTapBackgroundView:(UITapGestureRecognizer *)doubleTap
 {
-#warning TODO 需要再优化这里的算法
+// TODO 需要再优化这里的算法
     self.userInteractionEnabled = NO;
     CGPoint point = [doubleTap locationInView:doubleTap.view];
     CGFloat touchX = point.x;
@@ -279,7 +279,7 @@
     [self addSubview:self.progressView];;
     self.progressView.mode = XLProgressViewProgressMode;
 
-    [weakSelf.photoImageView sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed| SDWebImageLowPriority| SDWebImageHandleCookies progress:^(NSInteger receivedSize, NSInteger expectedSize,NSURL * _Nullable targetURL) {
+    [weakSelf.photoImageView sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed| SDWebImageLowPriority| SDWebImageHandleCookies progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (expectedSize>0) {
                 // 修改进度

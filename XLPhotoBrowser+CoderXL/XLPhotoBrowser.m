@@ -721,7 +721,7 @@
     CGRect targetRect; // 目标frame
     UIImage *image = self.sourceImageView.image;
     
-#warning 完善image为空的闪退
+//TODO 完善image为空的闪退
     if (image == nil) {
         ///objc[1903]: Class PLBuildVersion is implemented in both /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/PrivateFrameworks/AssetsLibraryServices.framework/AssetsLibraryServices (0x1110ec998) and /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/PrivateFrameworks/PhotoLibraryServices.framework/PhotoLibraryServices (0x110e6b880). One of the two will be used. Which one is undefined.
         //(lldb)  po tempView.frame
