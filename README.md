@@ -17,14 +17,26 @@
 
 
 ##2. 安装方法
-*	下载示例Demo,把里面的XLPhotoBrowser文件夹拖到你的项目中即可(注意: 里面用到了一些第三方的类库,如果你的项目中已经使用了这些库,可以视情况删除)
-
-*   使用cocoapods自动安装
+#### 2.1 第一种方法:  使用cocoapods自动安装
 
 ```
 pod 'XLPhotoBrowser+CoderXL'
 
 ```
+
+#### 2.2 第二种方法 :
+
+*  下载示例Demo
+*  把里面的XLPhotoBrowser文件夹拖到你的项目中(注意: 里面用到了一些第三方的类库,如果你的项目中已经使用了这些库,视情况删除)
+*  如果你的项目中没有用到SDWebImage框架,把图中SDWebImage文件夹也一起拖到你的工程中
+
+
+![Paste_Image.png](http://upload-images.jianshu.io/upload_images/1455933-526e4542398d4597.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+#### 注意:
+*  XLPhotoBrowser依赖于SDWebImage框架[3.8.0,3.9.0),由于SDWebImage4.0版本对API进行了修改,所以不兼容4.0版本
+
 
 ## 3. 使用说明
 ### 3.1基本使用(提供2种传递数据的方法:图片以数组形式批量传递 和 数据源方法分开传递每一个位置的图片数据)
