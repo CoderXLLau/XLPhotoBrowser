@@ -19,6 +19,7 @@
 @property (nonatomic , strong) UIImageView  *photoImageView;
 @property (nonatomic , strong) XLProgressView *progressView;
 @property (nonatomic , strong) UILabel *stateLabel;
+@property (nonatomic, assign) BOOL hasLoadedImage;
 
 @end
 
@@ -126,25 +127,6 @@
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    CGSize boundsSize = self.bounds.size;
-    CGRect frameToCenter = self.photoImageView.frame;
-    
-    if (frameToCenter.size.width < boundsSize.width) { // 长图才会出现这种情况
-        frameToCenter.origin.x = floor((boundsSize.width - frameToCenter.size.width) / 2.0);
-    } else {
-        frameToCenter.origin.x = 0;
-    }
-    
-    if (frameToCenter.size.height < boundsSize.height) {
-        frameToCenter.origin.y = floor((boundsSize.height - frameToCenter.size.height) / 2.0);
-    } else {
-        frameToCenter.origin.y = 0;
-    }
-    
-    // Center
-    if (!CGRectEqualToRect(self.photoImageView.frame, frameToCenter)){
-        self.photoImageView.frame = frameToCenter;
-    }
     
     self.stateLabel.bounds = CGRectMake(0, 0, 160, 30);
     self.stateLabel.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
@@ -177,18 +159,6 @@
 
 #pragma mark    -   private method - 手势处理,缩放图片
 
-//- (void)singleTap:(UITapGestureRecognizer *)singleTap
-//{
-//    if (self.zoomingScrollViewdelegate && [self.zoomingScrollViewdelegate respondsToSelector:@selector(zoomingScrollView:singleTapDetected:)]) {
-//        [self.zoomingScrollViewdelegate zoomingScrollView:self singleTapDetected:singleTap];
-//    }
-//}
-//
-//- (void)doubleTap:(UITapGestureRecognizer *)doubleTap
-//{
-//    [self handleDoubleTap:[doubleTap locationInView:doubleTap.view]];
-//}
-
 - (CGPoint)centerOfScrollViewContent:(UIScrollView *)scrollView
 {
     CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width)?
@@ -203,7 +173,7 @@
 - (CGRect)zoomRectForScale:(CGFloat)scale withCenter:(CGPoint)center
 {
     CGFloat height = self.frame.size.height / scale;
-    CGFloat width  = self.frame.size.width  / scale;
+    CGFloat width  = self.frame.size.width / scale;
     CGFloat x = center.x - width * 0.5;
     CGFloat y = center.y - height * 0.5;
     return CGRectMake(x, y, width, height);
@@ -258,6 +228,7 @@
     [self setMaxAndMinZoomScales];
     [self setNeedsLayout];
     self.progress = 1.0;
+    self.hasLoadedImage = YES;
 }
 
 /**
@@ -270,16 +241,12 @@
 {
     if (!url) {
         [self setShowImage:placeholder];
-        self.progress = 1.0f;
         return;
     }
     
-    UIImage *showImage = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:[url absoluteString]];
-    if (showImage) {
-        XLFormatLog(@"已经下载过图片,直接从缓存中获取");
-        self.photoImageView.image = showImage;
-        [self setMaxAndMinZoomScales];
-        self.progress = 1.0f;
+    UIImage *cacheImage = [[SDImageCache sharedImageCache] imageFromDiskCacheForKey:[url absoluteString]];
+    if (cacheImage) {
+        [self setShowImage:cacheImage];
         return;
     }
     
@@ -294,27 +261,27 @@
 
     [weakSelf.photoImageView sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed| SDWebImageLowPriority| SDWebImageHandleCookies progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            __strong __typeof(weakSelf)strongSelf = weakSelf;
             if (expectedSize>0) {
-                // 修改进度
-                weakSelf.progress = (CGFloat)receivedSize / expectedSize ;
+                strongSelf.progress = (CGFloat)receivedSize / expectedSize ;
             }
             //TODO???
-            [self resetZoomScale];
+//            [strongSelf resetZoomScale];
         });
         
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        [self.progressView removeFromSuperview];
-
+        __strong __typeof(weakSelf)strongSelf = weakSelf;
+        [strongSelf.progressView removeFromSuperview];
         if (error) {
-            [self setMaxAndMinZoomScales];
-            [weakSelf addSubview:weakSelf.stateLabel];
+            [strongSelf setMaxAndMinZoomScales];
+            [strongSelf addSubview:strongSelf.stateLabel];
             XLPBLog(@"加载图片失败 , 图片链接imageURL = %@ , 检查是否开启允许HTTP请求",imageURL);
         } else {
-            [weakSelf.stateLabel removeFromSuperview];
-            weakSelf.photoImageView.image = image;
-            [weakSelf.photoImageView setNeedsDisplay];
+            [strongSelf.stateLabel removeFromSuperview];
             [UIView animateWithDuration:0.25 animations:^{
-                [weakSelf setMaxAndMinZoomScales];
+                [strongSelf setShowImage:image];
+                [strongSelf.photoImageView setNeedsDisplay];
+                [strongSelf setMaxAndMinZoomScales];
             }];
         }
     }];

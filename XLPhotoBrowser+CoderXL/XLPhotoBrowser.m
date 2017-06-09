@@ -593,18 +593,15 @@
     zoomingScrollView.tag = 100 + index;
     zoomingScrollView.frame = CGRectMake((self.scrollView.xl_width) * index, 0, self.xl_width, self.xl_height);
     self.currentImageIndex = index;
-    if (zoomingScrollView.hasLoadedImage == NO) {
-        if ([self highQualityImageURLForIndex:index]) { // 如果提供了高清大图数据源,就去加载
-            [zoomingScrollView setShowHighQualityImageWithURL:[self highQualityImageURLForIndex:index] placeholderImage:[self placeholderImageForIndex:index]];
-        } else if ([self assetForIndex:index]) {
-            ALAsset *asset = [self assetForIndex:index];
-            CGImageRef imageRef = asset.defaultRepresentation.fullScreenImage;
-            [zoomingScrollView setShowImage:[UIImage imageWithCGImage:imageRef]];
-            CGImageRelease(imageRef);
-        } else {
-            [zoomingScrollView setShowImage:[self placeholderImageForIndex:index]];
-        }
-        zoomingScrollView.hasLoadedImage = YES;
+    if ([self highQualityImageURLForIndex:index]) { // 如果提供了高清大图数据源,就去加载
+        [zoomingScrollView setShowHighQualityImageWithURL:[self highQualityImageURLForIndex:index] placeholderImage:[self placeholderImageForIndex:index]];
+    } else if ([self assetForIndex:index]) {
+        ALAsset *asset = [self assetForIndex:index];
+        CGImageRef imageRef = asset.defaultRepresentation.fullScreenImage;
+        [zoomingScrollView setShowImage:[UIImage imageWithCGImage:imageRef]];
+        CGImageRelease(imageRef);
+    } else {
+        [zoomingScrollView setShowImage:[self placeholderImageForIndex:index]];
     }
     
     [self.visibleZoomingScrollViews addObject:zoomingScrollView];

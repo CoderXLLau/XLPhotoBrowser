@@ -44,10 +44,6 @@
  */
 @property (nonatomic, assign) CGFloat progress;
 /**
- *  是否已经加载过图片
- */
-@property (nonatomic, assign) BOOL hasLoadedImage;
-/**
  *  展示的图片
  */
 @property (nonatomic , strong , readonly) UIImage  *currentImage;
