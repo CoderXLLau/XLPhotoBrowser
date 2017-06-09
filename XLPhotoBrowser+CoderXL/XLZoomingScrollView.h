@@ -33,10 +33,10 @@
 @end
 
 
-@interface XLZoomingScrollView : UIScrollView
+@interface XLZoomingScrollView : UIView
 
 /**
- *  zoomingScrollViewdelegate , 要和UIScrollView的delegate区分开
+ *  zoomingScrollViewdelegate
  */
 @property (nonatomic , weak) id <XLZoomingScrollViewDelegate> zoomingScrollViewdelegate;
 /**
@@ -55,6 +55,7 @@
  *  展示图片的UIImageView视图  ,  回缩的动画用
  */
 @property (nonatomic , weak , readonly) UIImageView *imageView;
+@property (nonatomic , strong , readonly) UIScrollView *scrollview;
 
 /**
  *  显示图片

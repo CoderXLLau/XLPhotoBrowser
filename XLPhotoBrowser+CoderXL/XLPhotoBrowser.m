@@ -797,7 +797,7 @@
     tempView.contentMode = sourceView.contentMode;
     tempView.clipsToBounds = YES;
     tempView.image = zoomingScrollView.currentImage;
-    tempView.frame = CGRectMake( - zoomingScrollView.contentOffset.x + zoomingScrollView.imageView.xl_x,  - zoomingScrollView.contentOffset.y + zoomingScrollView.imageView.xl_y, zoomingScrollView.imageView.xl_width, zoomingScrollView.imageView.xl_height);
+    tempView.frame = CGRectMake( - zoomingScrollView.scrollview.contentOffset.x + zoomingScrollView.imageView.xl_x,  - zoomingScrollView.scrollview.contentOffset.y + zoomingScrollView.imageView.xl_y, zoomingScrollView.imageView.xl_width, zoomingScrollView.imageView.xl_height);
     [self addSubview:tempView];
     
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];

@@ -12,10 +12,13 @@
 #import "SDImageCache.h"
 
 @interface XLZoomingScrollView () <UIScrollViewDelegate>
+{
+   UIScrollView *_scrollview;
+}
 
 @property (nonatomic , strong) UIImageView  *photoImageView;
 @property (nonatomic , strong) XLProgressView *progressView;
-@property(nonatomic, strong) UILabel *stateLabel;
+@property (nonatomic , strong) UILabel *stateLabel;
 
 @end
 
@@ -46,9 +49,24 @@
 {
     if (_photoImageView == nil) {
         _photoImageView = [[UIImageView alloc] init];
+        _photoImageView.backgroundColor = [UIColor clearColor];
     }
     
     return _photoImageView;
+}
+
+- (UIScrollView *)scrollview
+{
+    if (!_scrollview) {
+        _scrollview = [[UIScrollView alloc] init];
+        _scrollview.frame = CGRectMake(0, 0, XLScreenW, XLScreenH);
+        [_scrollview addSubview:self.photoImageView];
+        _scrollview.delegate = self;
+        _scrollview.clipsToBounds = YES;
+        _scrollview.showsVerticalScrollIndicator = NO;
+        _scrollview.showsHorizontalScrollIndicator = NO;
+    }
+    return _scrollview;
 }
 
 - (UILabel *)stateLabel
@@ -95,12 +113,7 @@
  */
 - (void)initial
 {
-    self.showsVerticalScrollIndicator = NO;
-    self.showsHorizontalScrollIndicator = NO;
-    self.delegate = self;
-    self.backgroundColor= [UIColor clearColor];
-    self.photoImageView.backgroundColor = [UIColor clearColor];
-    [self addSubview:self.photoImageView];
+    [self addSubview:self.scrollview];
 
     UITapGestureRecognizer *singleTapBackgroundView = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapBackgroundView:)];
     UITapGestureRecognizer *doubleTapBackgroundView = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(doubleTapBackgroundView:)];
@@ -144,8 +157,7 @@
     
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView
 {
-    [self setNeedsLayout];
-    [self layoutIfNeeded];
+    self.photoImageView.center = [self centerOfScrollViewContent:scrollView];
 }
 
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
@@ -155,45 +167,37 @@
 
 - (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view
 {
-    self.scrollEnabled = YES;
+    self.scrollview.scrollEnabled = YES;
 }
 
 - (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(CGFloat)scale
 {
-    self.userInteractionEnabled = YES;
+    self.scrollview.userInteractionEnabled = YES;
 }
 
 #pragma mark    -   private method - 手势处理,缩放图片
 
-- (void)singleTap:(UITapGestureRecognizer *)singleTap
-{
-    if (self.zoomingScrollViewdelegate && [self.zoomingScrollViewdelegate respondsToSelector:@selector(zoomingScrollView:singleTapDetected:)]) {
-        [self.zoomingScrollViewdelegate zoomingScrollView:self singleTapDetected:singleTap];
-    }
-}
+//- (void)singleTap:(UITapGestureRecognizer *)singleTap
+//{
+//    if (self.zoomingScrollViewdelegate && [self.zoomingScrollViewdelegate respondsToSelector:@selector(zoomingScrollView:singleTapDetected:)]) {
+//        [self.zoomingScrollViewdelegate zoomingScrollView:self singleTapDetected:singleTap];
+//    }
+//}
+//
+//- (void)doubleTap:(UITapGestureRecognizer *)doubleTap
+//{
+//    [self handleDoubleTap:[doubleTap locationInView:doubleTap.view]];
+//}
 
-- (void)doubleTap:(UITapGestureRecognizer *)doubleTap
+- (CGPoint)centerOfScrollViewContent:(UIScrollView *)scrollView
 {
-    [self handleDoubleTap:[doubleTap locationInView:doubleTap.view]];
-}
-
-- (void)handleDoubleTap:(CGPoint)point
-{
-    self.userInteractionEnabled = NO;
-    CGRect zoomRect = [self zoomRectForScale:[self willBecomeZoomScale] withCenter:point];
-    [self zoomToRect:zoomRect animated:YES];
-}
-
-/**
- *  计算要伸缩到的目的比例
- */
-- (CGFloat)willBecomeZoomScale
-{
-    if (self.zoomScale > self.minimumZoomScale) {
-        return self.minimumZoomScale;
-    } else {
-        return self.maximumZoomScale;
-    }
+    CGFloat offsetX = (scrollView.bounds.size.width > scrollView.contentSize.width)?
+    (scrollView.bounds.size.width - scrollView.contentSize.width) * 0.5 : 0.0;
+    CGFloat offsetY = (scrollView.bounds.size.height > scrollView.contentSize.height)?
+    (scrollView.bounds.size.height - scrollView.contentSize.height) * 0.5 : 0.0;
+    CGPoint actualCenter = CGPointMake(scrollView.contentSize.width * 0.5 + offsetX,
+                                       scrollView.contentSize.height * 0.5 + offsetY);
+    return actualCenter;
 }
 
 - (CGRect)zoomRectForScale:(CGFloat)scale withCenter:(CGPoint)center
@@ -214,22 +218,31 @@
 
 - (void)doubleTapBackgroundView:(UITapGestureRecognizer *)doubleTap
 {
-// TODO 需要再优化这里的算法
-    self.userInteractionEnabled = NO;
-    CGPoint point = [doubleTap locationInView:doubleTap.view];
-    CGFloat touchX = point.x;
-    CGFloat touchY = point.y;
-    touchX *= 1/self.zoomScale;
-    touchY *= 1/self.zoomScale;
-    touchX += self.contentOffset.x;
-    touchY += self.contentOffset.y;
-    [self handleDoubleTap:CGPointMake(touchX, touchY)];
+    if (!self.hasLoadedImage) {
+        return;
+    }
+    self.scrollview.userInteractionEnabled = NO;
+    
+    
+    if (self.scrollview.zoomScale > self.scrollview.minimumZoomScale) {
+        [self.scrollview setZoomScale:self.scrollview.minimumZoomScale animated:YES];
+    } else {
+        CGPoint point = [doubleTap locationInView:doubleTap.view];
+        CGFloat touchX = point.x;
+        CGFloat touchY = point.y;
+        touchX *= 1/self.scrollview.zoomScale;
+        touchY *= 1/self.scrollview.zoomScale;
+        touchX += self.scrollview.contentOffset.x;
+        touchY += self.scrollview.contentOffset.y;
+        CGRect zoomRect = [self zoomRectForScale:self.scrollview.maximumZoomScale withCenter:CGPointMake(touchX, touchY)];
+        [self.scrollview zoomToRect:zoomRect animated:YES];
+    }
 }
 
 - (void)resetZoomScale
 {
-    self.maximumZoomScale = 1.0;
-    self.minimumZoomScale = 1.0;
+    self.scrollview.maximumZoomScale = 1.0;
+    self.scrollview.minimumZoomScale = 1.0;
 }
 
 #pragma mark    -   public method
@@ -285,6 +298,7 @@
                 // 修改进度
                 weakSelf.progress = (CGFloat)receivedSize / expectedSize ;
             }
+            //TODO???
             [self resetZoomScale];
         });
         
@@ -294,7 +308,7 @@
         if (error) {
             [self setMaxAndMinZoomScales];
             [weakSelf addSubview:weakSelf.stateLabel];
-            XLFormatLog(@"加载图片失败 , 图片链接imageURL = %@ , 检查是否开启允许HTTP请求",imageURL);
+            XLPBLog(@"加载图片失败 , 图片链接imageURL = %@ , 检查是否开启允许HTTP请求",imageURL);
         } else {
             [weakSelf.stateLabel removeFromSuperview];
             weakSelf.photoImageView.image = image;
@@ -322,15 +336,15 @@
     self.photoImageView.xl_x = 0;
     if (self.photoImageView.xl_height > XLScreenH) {
         self.photoImageView.xl_y = 0;
-        self.scrollEnabled = YES;
+        self.scrollview.scrollEnabled = YES;
     } else {
         self.photoImageView.xl_y = (XLScreenH - self.photoImageView.xl_height ) * 0.5;
-        self.scrollEnabled = NO;
+        self.scrollview.scrollEnabled = NO;
     }
-    self.maximumZoomScale = MAX(XLScreenH / self.photoImageView.xl_height, 3.0);
-    self.minimumZoomScale = 1.0;
-    self.zoomScale = 1.0;
-    self.contentSize = CGSizeMake(self.photoImageView.xl_width, MAX(self.photoImageView.xl_height, XLScreenH));
+    self.scrollview.maximumZoomScale = MAX(XLScreenH / self.photoImageView.xl_height, 3.0);
+    self.scrollview.minimumZoomScale = 1.0;
+    self.scrollview.zoomScale = 1.0;
+    self.scrollview.contentSize = CGSizeMake(self.photoImageView.xl_width, MAX(self.photoImageView.xl_height, XLScreenH));
 }
 
 /**
