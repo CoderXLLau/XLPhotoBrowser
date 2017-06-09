@@ -69,6 +69,37 @@ static NSString * const kFSActionSheetCellIdentifier = @"kFSActionSheetCellIdent
     return self;
 }
 
+- (instancetype)initWithTitle:(NSString *)title delegate:(id<FSActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle highlightedButtonTitle:(NSString *)highlightedButtonTitle otherButtonTitles:(NSArray<NSString *> *)otherButtonTitles sourceWindow:(UIWindow *)sourceWindow
+{
+    if (!(self = [super init])) return nil;
+    _popupWindow = sourceWindow;
+    _popupVC = sourceWindow.rootViewController;
+    _controllerView = sourceWindow.rootViewController.view;
+    
+    [self commonInit];
+    
+    NSMutableArray *titleItems = [@[] mutableCopy];
+    // 普通按钮
+    for (NSString *otherTitle in otherButtonTitles) {
+        if (otherTitle && otherTitle.length > 0) {
+            [titleItems addObject:FSActionSheetTitleItemMake(FSActionSheetTypeNormal, otherTitle)];
+        }
+    }
+    // 高亮按钮, 高亮按钮放在最下面.
+    if (highlightedButtonTitle && highlightedButtonTitle.length > 0) {
+        [titleItems addObject:FSActionSheetTitleItemMake(FSActionSheetTypeHighlighted, highlightedButtonTitle)];
+    }
+    
+    self.title = title?:@"";
+    self.delegate = delegate;
+    self.cancelTitle = (cancelButtonTitle && cancelButtonTitle.length != 0)?cancelButtonTitle:@"取消";
+    self.items = titleItems;
+    
+    [self addSubview:self.tableView];
+    
+    return self;
+}
+
 /*! @brief 在外部组装选项按钮item */
 - (instancetype)initWithTitle:(NSString *)title cancelTitle:(NSString *)cancelTitle items:(NSArray<FSActionSheetItem *> *)items {
     if (!(self = [super init])) return nil;

@@ -16,6 +16,8 @@
 
 @interface XLPhotoBrowser () <XLZoomingScrollViewDelegate , UIScrollViewDelegate>
 
+@property (nonatomic , strong) UIWindow *photoBrowserWindow;
+
 /**
  *  存放所有图片的容器
  */
@@ -173,6 +175,37 @@
     return _placeholderImage;
 }
 
+- (UIWindow *)photoBrowserWindow
+{
+    if (!_photoBrowserWindow) {
+        _photoBrowserWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        _photoBrowserWindow.windowLevel = MAXFLOAT;
+        UIViewController *tempVC = [[UIViewController alloc] init];
+        tempVC.view.backgroundColor = [UIColor clearColor];
+        _photoBrowserWindow.rootViewController = tempVC;
+        //    NSEnumerator *frontToBackWindows = [UIApplication.sharedApplication.windows reverseObjectEnumerator];
+        //    for (UIWindow *window in frontToBackWindows) {
+        //        BOOL windowOnMainScreen = window.screen == UIScreen.mainScreen;
+        //        BOOL windowIsVisible = !window.hidden && window.alpha > 0;
+        //        BOOL windowLevelSupported = (window.windowLevel >= UIWindowLevelNormal);
+        //        BOOL windowSizeIsEqualToScreen = (window.xl_width == XLScreenW && window.xl_height == XLScreenH);
+        //        if(windowOnMainScreen && windowIsVisible && windowLevelSupported && windowSizeIsEqualToScreen) {
+        //            return window;
+        //        }
+        //    }
+        //
+        //    XLPBLog(@"XLPhotoBrowser在当前工程未匹配到合适的window,请根据工程架构酌情调整此方法,匹配最优窗口");
+        //    if (XLPhotoBrowserDebug) {
+        //        NSAssert(false, @"XLPhotoBrowser在当前工程未匹配到window,请根据工程架构酌情调整findTheMainWindow方法,匹配最优窗口");
+        //    }
+        //
+        //    UIWindow * delegateWindow = [[[UIApplication sharedApplication] delegate] window];
+        //    return delegateWindow;
+        
+    }
+    return _photoBrowserWindow;
+}
+
 #pragma mark    -   initial
 
 - (void)awakeFromNib
@@ -282,7 +315,7 @@
     // 重设pagecontroldot图片
     self.currentPageDotImage = self.currentPageDotImage;
     self.pageDotImage = self.pageDotImage;
-
+    
     CGSize size = CGSizeZero;
     if ([self.pageControl isKindOfClass:[TAPageControl class]]) {
         TAPageControl *pageControl = (TAPageControl *)_pageControl;
@@ -375,32 +408,8 @@
     _savaImageTipLabel.xl_height = 30;
     _savaImageTipLabel.xl_width += 20;
     _savaImageTipLabel.center = self.center;
-
+    
     _indicatorView.center = self.center;
-}
-
-#pragma mark    -   private method
-
-- (UIWindow *)findTheMainWindow
-{
-    NSEnumerator *frontToBackWindows = [UIApplication.sharedApplication.windows reverseObjectEnumerator];
-    for (UIWindow *window in frontToBackWindows) {
-        BOOL windowOnMainScreen = window.screen == UIScreen.mainScreen;
-        BOOL windowIsVisible = !window.hidden && window.alpha > 0;
-        BOOL windowLevelSupported = (window.windowLevel >= UIWindowLevelNormal);
-        BOOL windowSizeIsEqualToScreen = (window.xl_width == XLScreenW && window.xl_height == XLScreenH);
-        if(windowOnMainScreen && windowIsVisible && windowLevelSupported && windowSizeIsEqualToScreen) {
-            return window;
-        }
-    }
-    
-    XLPBLog(@"XLPhotoBrowser在当前工程未匹配到合适的window,请根据工程架构酌情调整此方法,匹配最优窗口");
-    if (XLPhotoBrowserDebug) {
-        NSAssert(false, @"XLPhotoBrowser在当前工程未匹配到window,请根据工程架构酌情调整findTheMainWindow方法,匹配最优窗口");
-    }
-    
-    UIWindow * delegateWindow = [[[UIApplication sharedApplication] delegate] window];
-    return delegateWindow;
 }
 
 #pragma mark    -   private -- 长按图片相关
@@ -416,11 +425,11 @@
             });
             return;
         }
-
+        
         if (self.actionOtherButtonTitles.count <= 0 && self.actionSheetDeleteButtonTitle.length <= 0 && self.actionSheetTitle.length <= 0) {
             return;
         }
-        FSActionSheet *actionSheet = [[FSActionSheet alloc] initWithTitle:self.actionSheetTitle delegate:nil cancelButtonTitle:self.actionSheetCancelTitle highlightedButtonTitle:self.actionSheetDeleteButtonTitle otherButtonTitles:self.actionOtherButtonTitles];
+        FSActionSheet *actionSheet = [[FSActionSheet alloc] initWithTitle:self.actionSheetTitle delegate:nil cancelButtonTitle:self.actionSheetCancelTitle highlightedButtonTitle:self.actionSheetDeleteButtonTitle otherButtonTitles:self.actionOtherButtonTitles sourceWindow:self.photoBrowserWindow];
         __weak typeof(self) weakSelf = self;
         // 展示并绑定选择回调
         [actionSheet showWithSelectedCompletion:^(NSInteger selectedIndex) {
@@ -454,7 +463,7 @@
 //            [self updatePageControlIndex];
 //            [self showPhotos];
 //        }
-//        
+//
 //        self.scrollView.contentSize = CGSizeMake((self.scrollView.frame.size.width) * self.imageCount, 0);
 //        self.scrollView.contentOffset = CGPointMake(self.currentImageIndex * (self.scrollView.frame.size.width), 0);
 //    }
@@ -650,7 +659,7 @@
         if (![url isKindOfClass:[NSURL class]]) {
             XLPBLog(@"高清大图URL数据有问题,不是NSString也不是NSURL , 错误数据:%@ , 图片索引:%zd",url,index);
         }
-//        NSAssert([url isKindOfClass:[NSURL class]], @"高清大图URL数据有问题,不是NSString也不是NSURL");
+        //        NSAssert([url isKindOfClass:[NSURL class]], @"高清大图URL数据有问题,不是NSString也不是NSURL");
         return url;
     } else if(self.images.count>index) {
         if ([self.images[index] isKindOfClass:[NSURL class]]) {
@@ -700,16 +709,16 @@
 {
     // 获取到用户点击的那个UIImageView对象,进行坐标转化
     CGRect startRect;
-    if (self.sourceImageView) {
-        
-    } else if(self.datasource && [self.datasource respondsToSelector:@selector(photoBrowser:sourceImageViewForIndex:)]) {
-        self.sourceImageView = [self.datasource photoBrowser:self sourceImageViewForIndex:self.currentImageIndex];
-    } else {
-        [UIView animateWithDuration:0.25 animations:^{
-            self.alpha = 1.0;
-        }];
-        XLPBLog(@"需要提供源视图才能做弹出/退出图片浏览器的缩放动画");
-        return;
+    if (!self.sourceImageView) {
+        if(self.datasource && [self.datasource respondsToSelector:@selector(photoBrowser:sourceImageViewForIndex:)]) {
+            self.sourceImageView = [self.datasource photoBrowser:self sourceImageViewForIndex:self.currentImageIndex];
+        } else {
+            [UIView animateWithDuration:0.25 animations:^{
+                self.alpha = 1.0;
+            }];
+            XLPBLog(@"需要提供源视图才能做弹出/退出图片浏览器的缩放动画");
+            return;
+        }
     }
     startRect = [self.sourceImageView.superview convertRect:self.sourceImageView.frame toView:self];
     
@@ -721,16 +730,16 @@
     CGRect targetRect; // 目标frame
     UIImage *image = self.sourceImageView.image;
     
-//TODO 完善image为空的闪退
+    //TODO 完善image为空的闪退
     if (image == nil) {
         ///objc[1903]: Class PLBuildVersion is implemented in both /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/PrivateFrameworks/AssetsLibraryServices.framework/AssetsLibraryServices (0x1110ec998) and /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/PrivateFrameworks/PhotoLibraryServices.framework/PhotoLibraryServices (0x110e6b880). One of the two will be used. Which one is undefined.
         //(lldb)  po tempView.frame
-//        (origin = (x = 15, y = 100), size = (width = 100, height = 100))
-//        
-//        (lldb) po targetRect
-//        (origin = (x = 0, y = NaN), size = (width = 414, height = NaN))
+        //        (origin = (x = 15, y = 100), size = (width = 100, height = 100))
+        //
+        //        (lldb) po targetRect
+        //        (origin = (x = 0, y = NaN), size = (width = 414, height = NaN))
         
-
+        
         XLPBLog(@"需要提供源视图才能做弹出/退出图片浏览器的缩放动画");
         return;
     }
@@ -747,7 +756,7 @@
     targetRect = CGRectMake(x, y, width, height);
     self.scrollView.hidden = YES;
     self.alpha = 1.0;
-
+    
     // 动画修改图片视图的frame , 居中同时放大
     [UIView animateWithDuration:XLPhotoBrowserShowImageAnimationDuration animations:^{
         tempView.frame = targetRect;
@@ -781,7 +790,7 @@
     self.pageControl.hidden = YES;
     self.indexLabel.hidden = YES;
     self.saveButton.hidden = YES;
-
+    
     CGRect targetTemp = [sourceView.superview convertRect:sourceView.frame toView:self];
     
     UIImageView *tempView = [[UIImageView alloc] init];
@@ -880,11 +889,11 @@
     if (self.currentImageIndex < 0) {
         self.currentImageIndex = 0;
     }
-    UIWindow *window = [self findTheMainWindow];
     
-    self.frame = window.bounds;
+    self.frame = self.photoBrowserWindow.bounds;
     self.alpha = 0.0;
-    [window addSubview:self];
+    [self.photoBrowserWindow.rootViewController.view addSubview:self];
+    [self.photoBrowserWindow makeKeyAndVisible];
     [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
     [self iniaialUI];
 }
@@ -899,6 +908,7 @@
         self.alpha = 0.0;
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
+        self.photoBrowserWindow = nil;
     }];
 }
 
@@ -959,13 +969,13 @@
     }
     
     //检查数据源对象是否一直，如有需要自行打开
-//    Class imageClass = [images.firstObject class];
-//    for (id image in images) {
-//        if (![image isKindOfClass:imageClass]) {
-//            XLPBLog(@"传入的数据源数组内对象类型不一致,暂不支持,请检查");
-//            return nil;
-//        }
-//    }
+    //    Class imageClass = [images.firstObject class];
+    //    for (id image in images) {
+    //        if (![image isKindOfClass:imageClass]) {
+    //            XLPBLog(@"传入的数据源数组内对象类型不一致,暂不支持,请检查");
+    //            return nil;
+    //        }
+    //    }
     
     XLPhotoBrowser *browser = [[XLPhotoBrowser alloc] init];
     browser.imageCount = images.count;

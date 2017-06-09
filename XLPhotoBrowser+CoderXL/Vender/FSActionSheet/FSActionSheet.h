@@ -33,7 +33,16 @@
  *  @param otherButtonTitles      其他按钮标题集合
  */
 - (instancetype)initWithTitle:(NSString *)title delegate:(id<FSActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle highlightedButtonTitle:(NSString *)highlightedButtonTitle otherButtonTitles:(NSArray<NSString *> *)otherButtonTitles;
-
+/*! @author Steven
+ *  @brief 单文本选项快速初始化
+ *  @param title                  标题
+ *  @param delegate               代理
+ *  @param cancelButtonTitle      取消按钮标题
+ *  @param highlightedButtonTitle 高亮按钮标题
+ *  @param otherButtonTitles      其他按钮标题集合
+ *  @param sourceWindow           展示的目标窗口,如果不传递,内部会自动创建一个window
+ */
+- (instancetype)initWithTitle:(NSString *)title delegate:(id<FSActionSheetDelegate>)delegate cancelButtonTitle:(NSString *)cancelButtonTitle highlightedButtonTitle:(NSString *)highlightedButtonTitle otherButtonTitles:(NSArray<NSString *> *)otherButtonTitles sourceWindow:(UIWindow *)sourceWindow;
 /*! @author Steven
  *  @brief 在外部组装选项按钮item
  *  @param title       标题
