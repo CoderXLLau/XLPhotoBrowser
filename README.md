@@ -236,6 +236,13 @@ pod 'XLPhotoBrowser+CoderXL'
 		* 打开在XLPhotoBrowserConfig中的这个代码即可 //#define XLPhotoBrowserDebug 1  
 	*  还可以在这里修改很多样式属性,如:修改浏览器的背景色/图片间隔等 ,使用方式很简单,具体的使用就不在这里赘述
 
-## 4. 喜欢的话,就给作者一个star ,你可以通过下面的方式联系到我
+## 4. 更新日志
+    *   1.1.0 
+        *   1. 优化框架结构，XLPhotoBrowser内部维护一个优先级为maxfloat的UIWindow，避免不同的项目会因为窗口问题造成XLPhotoBrowser显示不正确等问题
+        *   2. 修改FSActionSheet源码，修复长按弹出ActionSheet显示在图片后面等问题
+        *   3. 优化图片放大缩小处理逻辑，修复已知bug
+
+
+## 5. 喜欢的话,就给作者一个star ,你可以通过下面的方式联系到我
 *  QQ群 : 579572313 (有什么问题,欢迎进群讨论提问)
 *  邮箱 : coder_xl@163.com
