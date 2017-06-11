@@ -23,16 +23,16 @@ pod 'XLPhotoBrowser+CoderXL'
 
 #### 2.2 第二种方法 :
 
-*  下载示例Demo
-*  把里面的XLPhotoBrowser文件夹拖到你的项目中(注意: 里面用到了一些第三方的类库,如果你的项目中已经使用了这些库,视情况删除)
-*  如果你的项目中没有用到SDWebImage框架,把图中SDWebImage文件夹也一起拖到你的工程中
+*  2.2.1 下载示例Demo
+*  2.2.2 把里面的XLPhotoBrowser文件夹拖到你的项目中(注意: 里面用到了一些第三方的类库,如果你的项目中已经使用了这些库,视情况删除)
+*  2.2.3 如果你的项目中没有用到SDWebImage框架,把图中SDWebImage文件夹也一起拖到你的工程中
 
 
 ![Paste_Image.png](http://upload-images.jianshu.io/upload_images/1455933-526e4542398d4597.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 #### 注意:
-*  XLPhotoBrowser依赖于SDWebImage框架[3.8.0,3.9.0),由于SDWebImage4.0版本对API进行了修改,所以不兼容4.0版本
+*  XLPhotoBrowser依赖于SDWebImage框架[3.8.0,3.9.0),`由于SDWebImage4.0版本对API进行了修改,所以不兼容4.0版本`
 
 
 ## 3. 使用说明
