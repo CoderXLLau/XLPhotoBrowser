@@ -96,16 +96,43 @@
     return _indicatorView;
 }
 
-- (void)setBrowserStyle:(XLPhotoBrowserStyle)browserStyle
+- (UIImage *)placeholderImage
 {
-    _browserStyle = browserStyle;
-     [self updatePageControlIndex];
+    if (!_placeholderImage) {
+        _placeholderImage = [UIImage xl_imageWithColor:[UIColor grayColor] size:CGSizeMake(100, 100)];
+    }
+    return _placeholderImage;
 }
 
-- (void)setShowPageControl:(BOOL)showPageControl
+- (UIWindow *)photoBrowserWindow
 {
-    _showPageControl = showPageControl;
-    _pageControl.hidden = !showPageControl;
+    if (!_photoBrowserWindow) {
+        _photoBrowserWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        _photoBrowserWindow.windowLevel = MAXFLOAT;
+        UIViewController *tempVC = [[UIViewController alloc] init];
+        tempVC.view.backgroundColor = [UIColor clearColor];
+        _photoBrowserWindow.rootViewController = tempVC;
+        //    NSEnumerator *frontToBackWindows = [UIApplication.sharedApplication.windows reverseObjectEnumerator];
+        //    for (UIWindow *window in frontToBackWindows) {
+        //        BOOL windowOnMainScreen = window.screen == UIScreen.mainScreen;
+        //        BOOL windowIsVisible = !window.hidden && window.alpha > 0;
+        //        BOOL windowLevelSupported = (window.windowLevel >= UIWindowLevelNormal);
+        //        BOOL windowSizeIsEqualToScreen = (window.xl_width == XLScreenW && window.xl_height == XLScreenH);
+        //        if(windowOnMainScreen && windowIsVisible && windowLevelSupported && windowSizeIsEqualToScreen) {
+        //            return window;
+        //        }
+        //    }
+        //
+        //    XLPBLog(@"XLPhotoBrowser在当前工程未匹配到合适的window,请根据工程架构酌情调整此方法,匹配最优窗口");
+        //    if (XLPhotoBrowserDebug) {
+        //        NSAssert(false, @"XLPhotoBrowser在当前工程未匹配到window,请根据工程架构酌情调整findTheMainWindow方法,匹配最优窗口");
+        //    }
+        //
+        //    UIWindow * delegateWindow = [[[UIApplication sharedApplication] delegate] window];
+        //    return delegateWindow;
+        
+    }
+    return _photoBrowserWindow;
 }
 
 - (void)setCurrentPageDotColor:(UIColor *)currentPageDotColor
@@ -165,45 +192,42 @@
 {
     _pageControlStyle = pageControlStyle;
     [self setUpPageControl];
+    [self updateIndexVisible];
 }
 
-- (UIImage *)placeholderImage
+- (void)setHidesForSinglePage:(BOOL)hidesForSinglePage
 {
-    if (!_placeholderImage) {
-        _placeholderImage = [UIImage xl_imageWithColor:[UIColor grayColor] size:CGSizeMake(100, 100)];
-    }
-    return _placeholderImage;
+    _hidesForSinglePage = hidesForSinglePage;
+    [self updateIndexVisible];
 }
 
-- (UIWindow *)photoBrowserWindow
+- (void)setBrowserStyle:(XLPhotoBrowserStyle)browserStyle
 {
-    if (!_photoBrowserWindow) {
-        _photoBrowserWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-        _photoBrowserWindow.windowLevel = MAXFLOAT;
-        UIViewController *tempVC = [[UIViewController alloc] init];
-        tempVC.view.backgroundColor = [UIColor clearColor];
-        _photoBrowserWindow.rootViewController = tempVC;
-        //    NSEnumerator *frontToBackWindows = [UIApplication.sharedApplication.windows reverseObjectEnumerator];
-        //    for (UIWindow *window in frontToBackWindows) {
-        //        BOOL windowOnMainScreen = window.screen == UIScreen.mainScreen;
-        //        BOOL windowIsVisible = !window.hidden && window.alpha > 0;
-        //        BOOL windowLevelSupported = (window.windowLevel >= UIWindowLevelNormal);
-        //        BOOL windowSizeIsEqualToScreen = (window.xl_width == XLScreenW && window.xl_height == XLScreenH);
-        //        if(windowOnMainScreen && windowIsVisible && windowLevelSupported && windowSizeIsEqualToScreen) {
-        //            return window;
-        //        }
-        //    }
-        //
-        //    XLPBLog(@"XLPhotoBrowser在当前工程未匹配到合适的window,请根据工程架构酌情调整此方法,匹配最优窗口");
-        //    if (XLPhotoBrowserDebug) {
-        //        NSAssert(false, @"XLPhotoBrowser在当前工程未匹配到window,请根据工程架构酌情调整findTheMainWindow方法,匹配最优窗口");
-        //    }
-        //
-        //    UIWindow * delegateWindow = [[[UIApplication sharedApplication] delegate] window];
-        //    return delegateWindow;
-        
+    _browserStyle = browserStyle;
+    [self updateIndexVisible];
+}
+
+- (void)setPageControlAliment:(XLPhotoBrowserPageControlAliment)pageControlAliment
+{
+    _pageControlAliment = pageControlAliment;
+    switch (self.pageControlAliment) {
+        case XLPhotoBrowserPageControlAlimentLeft:
+        {
+            self.pageControl.xl_x = 10;
+        }
+            break;
+        case XLPhotoBrowserPageControlAlimentRight:
+        {
+            self.pageControl.xl_x = (self.xl_width - self.pageControl.xl_width) - 10;
+        }
+            break;
+        case XLPhotoBrowserPageControlAlimentCenter:
+        default:
+        {
+            self.pageControl.xl_x = (self.xl_width - self.pageControl.xl_width) * 0.5;
+        }
+            break;
     }
-    return _photoBrowserWindow;
 }
 
 #pragma mark    -   initial
@@ -230,7 +254,6 @@
     [self placeholderImage];
     
     _pageControlAliment = XLPhotoBrowserPageControlAlimentCenter;
-    _showPageControl = YES;
     _pageControlDotSize = CGSizeMake(10, 10);
     _pageControlStyle = XLPhotoBrowserPageControlStyleAnimated;
     _hidesForSinglePage = YES;
@@ -245,15 +268,7 @@
 - (void)iniaialUI
 {
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    [self setUpScrollView];
-    [self setUpPageControl];
-    [self setUpToolBars];
-    [self showFirstImage];
-    [self updatePageControlIndex];
-}
 
-- (void)setUpScrollView
-{
     CGRect rect = self.bounds;
     rect.size.width += XLPhotoBrowserImageViewMargin;
     self.scrollView = [[UIScrollView alloc] init];
@@ -270,29 +285,50 @@
     if (self.currentImageIndex == 0) { // 修复bug , 如果刚进入的时候是0,不会调用scrollViewDidScroll:方法,不会展示第一张图片
         [self showPhotos];
     }
+    
+    [self setUpPageControl];
+
+    // 添加XLPhotoBrowserStyleSimple相关控件
+    UILabel *indexLabel = [[UILabel alloc] init];
+    indexLabel.textAlignment = NSTextAlignmentCenter;
+    indexLabel.textColor = [UIColor whiteColor];
+    indexLabel.font = [UIFont systemFontOfSize:18];
+    indexLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+    indexLabel.clipsToBounds = YES;
+    self.indexLabel = indexLabel;
+    [self addSubview:indexLabel];
+    UIButton *saveButton = [[UIButton alloc] init];
+    [saveButton setTitle:@"保存" forState:UIControlStateNormal];
+    [saveButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    saveButton.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:0.90f];
+    saveButton.layer.cornerRadius = 5;
+    saveButton.clipsToBounds = YES;
+    [saveButton addTarget:self action:@selector(saveImage) forControlEvents:UIControlEventTouchUpInside];
+    self.saveButton = saveButton;
+    [self addSubview:saveButton];
+
+    [self showFirstImage];
+    [self updateIndexContent];
+    [self updateIndexVisible];
 }
 
-/**
- *  设置pageControl
- */
 - (void)setUpPageControl
 {
-    if (_pageControl) [_pageControl removeFromSuperview]; // 重新加载数据时调整
-    
-    if ((self.imageCount <= 1) && self.hidesForSinglePage) {
-        return;
+    if (_pageControl) {
+        [_pageControl removeFromSuperview];
+        _pageControl = nil;
+        // 重新加载数据时调整
     }
-    
     switch (self.pageControlStyle) {
         case XLPhotoBrowserPageControlStyleAnimated:
         {
             TAPageControl *pageControl = [[TAPageControl alloc] init];
+            _pageControl = pageControl;
             pageControl.numberOfPages = self.imageCount;
             pageControl.dotColor = self.currentPageDotColor;
             pageControl.currentPage = self.currentImageIndex;
             pageControl.userInteractionEnabled = NO;
             [self addSubview:pageControl];
-            _pageControl = pageControl;
         }
             break;
         case XLPhotoBrowserPageControlStyleClassic:
@@ -314,52 +350,6 @@
     // 重设pagecontroldot图片
     self.currentPageDotImage = self.currentPageDotImage;
     self.pageDotImage = self.pageDotImage;
-    
-    CGSize size = CGSizeZero;
-    if ([self.pageControl isKindOfClass:[TAPageControl class]]) {
-        TAPageControl *pageControl = (TAPageControl *)_pageControl;
-        size = [pageControl sizeForNumberOfPages:self.imageCount];
-    } else {
-        size = CGSizeMake(self.imageCount * self.pageControlDotSize.width * 1.2, self.pageControlDotSize.height);
-    }
-    CGFloat x = (self.xl_width - size.width) * 0.5;
-    if (self.pageControlAliment == XLPhotoBrowserPageControlAlimentRight) {
-        x = self.xl_width - size.width - 10;
-    }
-    CGFloat y = self.xl_height - size.height - 10;
-    if ([self.pageControl isKindOfClass:[TAPageControl class]]) {
-        TAPageControl *pageControl = (TAPageControl *)_pageControl;
-        [pageControl sizeToFit];
-    }
-    self.pageControl.frame = CGRectMake(x, y, size.width, size.height);
-    self.pageControl.hidden = !self.showPageControl;
-}
-
-- (void)setUpToolBars
-{
-    UILabel *indexLabel = [[UILabel alloc] init];
-    indexLabel.bounds = CGRectMake(0, 0, 80, 30);
-    indexLabel.xl_centerX = self.xl_width * 0.5;
-    indexLabel.xl_centerY = 35;
-    indexLabel.textAlignment = NSTextAlignmentCenter;
-    indexLabel.textColor = [UIColor whiteColor];
-    indexLabel.font = [UIFont systemFontOfSize:18];
-    indexLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-    indexLabel.layer.cornerRadius = indexLabel.bounds.size.height * 0.5;
-    indexLabel.clipsToBounds = YES;
-    self.indexLabel = indexLabel;
-    [self addSubview:indexLabel];
-    
-    UIButton *saveButton = [[UIButton alloc] init];
-    [saveButton setTitle:@"保存" forState:UIControlStateNormal];
-    [saveButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    saveButton.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:0.90f];
-    saveButton.layer.cornerRadius = 5;
-    saveButton.clipsToBounds = YES;
-    [saveButton addTarget:self action:@selector(saveImage) forControlEvents:UIControlEventTouchUpInside];
-    saveButton.frame = CGRectMake(30, self.bounds.size.height - 70, 50, 25);
-    self.saveButton = saveButton;
-    [self addSubview:saveButton];
 }
 
 - (void)dealloc
@@ -368,18 +358,65 @@
     [self.visibleZoomingScrollViews removeAllObjects];
 }
 
+#pragma mark    -   layout 
+
+- (void)updateFrames
+{
+    self.saveButton.frame = CGRectMake(30, self.bounds.size.height - 70, 50, 25);
+    self.indexLabel.bounds = CGRectMake(0, 0, 80, 30);
+    self.indexLabel.xl_centerX = self.xl_width * 0.5;
+    self.indexLabel.xl_centerY = 35;
+    self.indexLabel.layer.cornerRadius = self.indexLabel.bounds.size.height * 0.5;
+    
+    self.savaImageTipLabel.layer.cornerRadius = 5;
+    self.savaImageTipLabel.clipsToBounds = YES;
+    [self.savaImageTipLabel sizeToFit];
+    self.savaImageTipLabel.xl_height = 30;
+    self.savaImageTipLabel.xl_width += 20;
+    self.savaImageTipLabel.center = self.center;
+    
+    self.indicatorView.center = self.center;
+    
+    CGSize size = CGSizeZero;
+    if ([self.pageControl isKindOfClass:[TAPageControl class]]) {
+        TAPageControl *pageControl = (TAPageControl *)_pageControl;
+        size = [pageControl sizeForNumberOfPages:self.imageCount];
+        // TAPageControl 本身设计的缺陷,如果TAPageControl在设置颜色等属性以后再给frame,里面的圆点位置可能不正确 , 但是调用sizeToFit 又会改变TAPageControl的显隐状态,所以还需要
+        BOOL hidden = pageControl.hidden;
+        [pageControl sizeToFit];
+        pageControl.hidden = hidden;
+    } else {
+        size = CGSizeMake(self.imageCount * self.pageControlDotSize.width * 1.2, self.pageControlDotSize.height);
+    }
+    CGFloat x;
+    switch (self.pageControlAliment) {
+        case XLPhotoBrowserPageControlAlimentCenter:
+        {
+            x = (self.xl_width - size.width) * 0.5;
+        }
+            break;
+        case XLPhotoBrowserPageControlAlimentLeft:
+        {
+            x = 10;
+        }
+            break;
+        case XLPhotoBrowserPageControlAlimentRight:
+        {
+            x = self.xl_width - size.width - 10;
+        }
+            break;
+        default:
+            break;
+    }
+    CGFloat y = self.xl_height - size.height - 10;
+    self.pageControl.frame = CGRectMake(x, y, size.width, size.height);
+}
+
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
-    _savaImageTipLabel.layer.cornerRadius = 5;
-    _savaImageTipLabel.clipsToBounds = YES;
-    [_savaImageTipLabel sizeToFit];
-    _savaImageTipLabel.xl_height = 30;
-    _savaImageTipLabel.xl_width += 20;
-    _savaImageTipLabel.center = self.center;
-    
-    _indicatorView.center = self.center;
+    [self updateFrames];
+    XLPBLog(@"layoutSubviews");
 }
 
 #pragma mark    -   private -- 长按图片相关
@@ -784,32 +821,23 @@
     [self showPhotos];
     NSInteger pageNum = floor((scrollView.contentOffset.x + scrollView.bounds.size.width * 0.5) / scrollView.bounds.size.width);
     self.currentImageIndex = pageNum == self.imageCount ? pageNum - 1 : pageNum;
-    [self updatePageControlIndex];
+    [self updateIndexContent];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
     NSInteger pageNum = floor((scrollView.contentOffset.x + scrollView.bounds.size.width * 0.5) / scrollView.bounds.size.width);
     self.currentImageIndex = pageNum == self.imageCount ? pageNum - 1 : pageNum;
-    [self updatePageControlIndex];
+    [self updateIndexContent];
 }
 
+#pragma mark    -   图片索引的显示内容和显隐逻辑
+
 /**
- *  修改图片指示索引label
+ 更新索引指示控件的显隐逻辑
  */
-- (void)updatePageControlIndex
+- (void)updateIndexVisible
 {
-    if (self.imageCount == 1 && self.hidesForSinglePage == YES) {
-        self.indexLabel.hidden = YES;
-        self.pageControl.hidden = YES;
-        return;
-    }
-    
-    UIPageControl *pageControl = (UIPageControl *)self.pageControl;
-    pageControl.currentPage = self.currentImageIndex;
-    NSString *title = [NSString stringWithFormat:@"%zd / %zd",self.currentImageIndex+1,self.imageCount];
-    self.indexLabel.text = title;
-    
     switch (self.browserStyle) {
         case XLPhotoBrowserStylePageControl:
         {
@@ -835,6 +863,22 @@
         default:
             break;
     }
+    
+    if (self.imageCount == 1 && self.hidesForSinglePage == YES) {
+        self.indexLabel.hidden = YES;
+        self.pageControl.hidden = YES;
+    }
+}
+
+/**
+ *  修改图片指示索引内容
+ */
+- (void)updateIndexContent
+{
+    UIPageControl *pageControl = (UIPageControl *)self.pageControl;
+    pageControl.currentPage = self.currentImageIndex;
+    NSString *title = [NSString stringWithFormat:@"%zd / %zd",self.currentImageIndex+1,self.imageCount];
+    self.indexLabel.text = title;
 }
 
 #pragma mark    -   public method

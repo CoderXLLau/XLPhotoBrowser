@@ -13,6 +13,8 @@
 #import "UIView+XLExtension.h"
 #import "XLPhotoBrowserConfig.h"
 
+#import "TAPageControl.h"
+
 @interface ViewController ()
 
 @end
@@ -45,6 +47,20 @@
         button.layer.masksToBounds = YES;
         button.titleLabel.adjustsFontSizeToFitWidth = YES;
     }
+    
+//    TAPageControl *control = [[TAPageControl alloc] init];
+//    control.frame = CGRectMake(100, 100, 200, 30);
+//    control.dotColor = [UIColor greenColor];
+//    control.currentPage = 3;
+//    control.numberOfPages = 10;
+//    [self.view addSubview:control];
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        control.currentPage = 5;
+//    });
+//    
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        control.hidden = YES;
+//    });
 }
 
 - (void)clickButton:(UIButton *)button

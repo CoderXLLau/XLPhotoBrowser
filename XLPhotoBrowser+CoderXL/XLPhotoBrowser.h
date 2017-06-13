@@ -108,10 +108,6 @@
 #pragma mark    自定义PageControl样式接口
 
 /**
- *  是否显示分页控件 , 默认YES
- */
-@property (nonatomic, assign) BOOL showPageControl;
-/**
  *  是否在只有一张图时隐藏pagecontrol，默认为YES
  */
 @property(nonatomic) BOOL hidesForSinglePage;
