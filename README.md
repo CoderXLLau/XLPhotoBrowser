@@ -1,5 +1,5 @@
 ## 1.XLPhotoBrowser描述
-一个简单实用的图片浏览器,效果类似微信图片浏览器,支持弹出动画和回缩动画,支持多图浏览,支持本地和网络图片浏览,支持多种属性自定义(暂不支持横竖屏适配)
+一个简单实用的图片浏览器,效果类似微信图片浏览器,支持弹出动画和回缩动画,支持多图浏览,支持本地和网络图片浏览,支持多种属性自定义(支持横竖屏浏览)
 
 ### 支持多种图片浏览样式
 * 类似微信图片浏览样式XLPhotoBrowserStylePageControl , 底部有个pagecontrol显示图片索引
@@ -32,7 +32,7 @@ pod 'XLPhotoBrowser+CoderXL'
 
 
 #### 注意:
-*  XLPhotoBrowser依赖于SDWebImage框架[3.8.0,3.9.0),`由于SDWebImage4.0版本对API进行了修改,所以不兼容4.0版本`
+*  XLPhotoBrowser依赖于SDWebImage框架4.0.0版本,`由于SDWebImage4.0版本对API进行了修改,所以不兼容SDWebImage4.0以下版本`
 
 
 ## 3. 使用说明
@@ -237,6 +237,10 @@ pod 'XLPhotoBrowser+CoderXL'
 	*  还可以在这里修改很多样式属性,如:修改浏览器的背景色/图片间隔等 ,使用方式很简单,具体的使用就不在这里赘述
 
 ## 4. 更新日志
+    *   1.2.0
+        *   1. 支持横竖屏适配(设备没有锁定方向,且项目配置支持横屏才可以触发横屏浏览模式)
+        *   2. 更新SDWebImage到4.0.0 , 由于SDWebImage4.0版本对API进行了修改,所以不兼容SDWebImage4.0以下版本
+        *   3. 修复图片下载进度条等已知bug
     *   1.1.0 
         *   1. 优化框架结构，XLPhotoBrowser内部维护一个优先级为maxfloat的UIWindow，避免不同的项目会因为窗口问题造成XLPhotoBrowser显示不正确等问题
         *   2. 修改FSActionSheet源码，修复长按弹出ActionSheet显示在图片后面等问题

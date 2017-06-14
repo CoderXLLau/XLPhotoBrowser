@@ -15,6 +15,7 @@
 #define XLPhotoBrowserDebug 1
 //是否开启断言调试模式
 #define IsOpenAssertDebug 1
+#define XLPhotoBrowserVersion @"1.2.0"
 
 /**
  *  进度视图类型类型
