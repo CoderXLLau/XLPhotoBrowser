@@ -71,6 +71,8 @@
     button.frame = CGRectMake(0, 0, 120, 40);
     [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+    
+    self.view.backgroundColor = [UIColor redColor];
 }
 
 - (void)clearImageCache

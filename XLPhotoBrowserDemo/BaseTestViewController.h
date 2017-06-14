@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "UIView+XLExtension.h"
 #import "XLPhotoBrowser.h"
+#import "UIButton+XLExtension.h"
 
 @interface BaseTestViewController : UIViewController <XLPhotoBrowserDelegate, XLPhotoBrowserDatasource>
 

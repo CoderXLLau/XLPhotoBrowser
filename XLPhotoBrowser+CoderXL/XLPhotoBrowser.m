@@ -11,8 +11,9 @@
 #import "TAPageControl.h"
 #import "FSActionSheetConfig.h"
 #import "FSActionSheet.h"
-
 #import "XLPhotoBrowserConfig.h"
+
+#define BaseTag 100
 
 @interface XLPhotoBrowser () <XLZoomingScrollViewDelegate , UIScrollViewDelegate>
 
@@ -110,7 +111,8 @@
         _photoBrowserWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
         _photoBrowserWindow.windowLevel = MAXFLOAT;
         UIViewController *tempVC = [[UIViewController alloc] init];
-        tempVC.view.backgroundColor = [UIColor clearColor];
+        tempVC.view.backgroundColor = XLPhotoBrowserBackgrounColor;
+;
         _photoBrowserWindow.rootViewController = tempVC;
         //    NSEnumerator *frontToBackWindows = [UIApplication.sharedApplication.windows reverseObjectEnumerator];
         //    for (UIWindow *window in frontToBackWindows) {
@@ -190,6 +192,7 @@
 
 - (void)setPageControlStyle:(XLPhotoBrowserPageControlStyle)pageControlStyle
 {
+    XLLogFunc;
     _pageControlStyle = pageControlStyle;
     [self setUpPageControl];
     [self updateIndexVisible];
@@ -263,26 +266,27 @@
     
     self.currentImageIndex = 0;
     self.imageCount = 0;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self  selector:@selector(orientationDidChange) name:UIDeviceOrientationDidChangeNotification  object:nil];
+
 }
 
 - (void)iniaialUI
 {
+    XLLogFunc;
+
     [self.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 
-    CGRect rect = self.bounds;
-    rect.size.width += XLPhotoBrowserImageViewMargin;
     self.scrollView = [[UIScrollView alloc] init];
-    self.scrollView.frame = rect;
-    self.scrollView.xl_x = 0;
     self.scrollView.delegate = self;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.pagingEnabled = YES;
     self.scrollView.backgroundColor = [UIColor clearColor];
-    self.scrollView.contentSize = CGSizeMake((self.scrollView.frame.size.width) * self.imageCount, 0);
     [self addSubview:self.scrollView];
-    self.scrollView.contentOffset = CGPointMake(self.currentImageIndex * (self.scrollView.frame.size.width), 0);
-    if (self.currentImageIndex == 0) { // 修复bug , 如果刚进入的时候是0,不会调用scrollViewDidScroll:方法,不会展示第一张图片
+
+    if (self.currentImageIndex == 0) { // 如果刚进入的时候是0,不会调用scrollViewDidScroll:方法,不会展示第一张图片
+        XLFormatLog(@"self.currentImageIndex == %zd",self.currentImageIndex);
         [self showPhotos];
     }
     
@@ -314,6 +318,7 @@
 
 - (void)setUpPageControl
 {
+    XLLogFunc;
     if (_pageControl) {
         [_pageControl removeFromSuperview];
         _pageControl = nil;
@@ -360,13 +365,37 @@
 
 #pragma mark    -   layout 
 
+- (void)orientationDidChange
+{
+    XLLogFunc;
+    self.scrollView.delegate = nil; // 旋转期间,禁止调用scrollView的代理事件等
+    XLZoomingScrollView *temp = [self zoomingScrollViewAtIndex:self.currentImageIndex];
+    [temp.scrollview setZoomScale:1.0 animated:YES];
+    [self updateFrames];
+    self.scrollView.delegate = self;
+}
+
 - (void)updateFrames
 {
-    self.saveButton.frame = CGRectMake(30, self.bounds.size.height - 70, 50, 25);
+    XLLogFunc;
+    self.frame = [UIScreen mainScreen].bounds;
+    CGRect rect = self.bounds;
+    rect.size.width += XLPhotoBrowserImageViewMargin;
+    self.scrollView.frame = rect; // frame修改的时候,也会触发scrollViewDidScroll,不是每次都触发
+    self.scrollView.xl_x = 0;
+    self.scrollView.contentSize = CGSizeMake((self.scrollView.xl_width) * self.imageCount, 0);
+    self.scrollView.contentOffset = CGPointMake(self.currentImageIndex * (self.scrollView.xl_width), 0);// 回触发scrollViewDidScroll
+    [self.scrollView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if (obj.tag >= BaseTag) {
+            obj.frame = CGRectMake((self.scrollView.xl_width) * (obj.tag - BaseTag), 0, self.xl_width, self.xl_height);
+        }
+    }];
+    
+    self.saveButton.frame = CGRectMake(30, self.xl_height - 70, 50, 25);
     self.indexLabel.bounds = CGRectMake(0, 0, 80, 30);
     self.indexLabel.xl_centerX = self.xl_width * 0.5;
     self.indexLabel.xl_centerY = 35;
-    self.indexLabel.layer.cornerRadius = self.indexLabel.bounds.size.height * 0.5;
+    self.indexLabel.layer.cornerRadius = self.indexLabel.xl_height * 0.5;
     
     self.savaImageTipLabel.layer.cornerRadius = 5;
     self.savaImageTipLabel.clipsToBounds = YES;
@@ -414,9 +443,9 @@
 
 - (void)layoutSubviews
 {
+    XLLogFunc;
     [super layoutSubviews];
     [self updateFrames];
-    XLPBLog(@"layoutSubviews");
 }
 
 #pragma mark    -   private -- 长按图片相关
@@ -511,6 +540,7 @@
 
 - (void)showPhotos
 {
+    XLLogFunc;
     // 只有一张图片
     if (self.imageCount == 1) {
         [self setUpImageForZoomingScrollViewAtIndex:0];
@@ -537,7 +567,7 @@
     // 回收不再显示的zoomingScrollView
     NSInteger zoomingScrollViewIndex = 0;
     for (XLZoomingScrollView *zoomingScrollView in self.visibleZoomingScrollViews) {
-        zoomingScrollViewIndex = zoomingScrollView.tag - 100;
+        zoomingScrollViewIndex = zoomingScrollView.tag - BaseTag;
         if (zoomingScrollViewIndex < firstIndex || zoomingScrollViewIndex > lastIndex) {
             [self.reusableZoomingScrollViews addObject:zoomingScrollView];
             [zoomingScrollView prepareForReuse];
@@ -565,7 +595,7 @@
 - (BOOL)isShowingZoomingScrollViewAtIndex:(NSInteger)index
 {
     for (XLZoomingScrollView* view in self.visibleZoomingScrollViews) {
-        if ((view.tag - 100) == index) {
+        if ((view.tag - BaseTag) == index) {
             return YES;
         }
     }
@@ -580,7 +610,7 @@
 - (XLZoomingScrollView *)zoomingScrollViewAtIndex:(NSInteger)index
 {
     for (XLZoomingScrollView* zoomingScrollView in self.visibleZoomingScrollViews) {
-        if ((zoomingScrollView.tag - 100) == index) {
+        if ((zoomingScrollView.tag - BaseTag) == index) {
             return zoomingScrollView;
         }
     }
@@ -594,10 +624,11 @@
  */
 - (void)setUpImageForZoomingScrollViewAtIndex:(NSInteger)index
 {
+    XLLogFunc;
     XLZoomingScrollView *zoomingScrollView = [self dequeueReusableZoomingScrollView];
     zoomingScrollView.zoomingScrollViewdelegate = self;
     [zoomingScrollView addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)]];
-    zoomingScrollView.tag = 100 + index;
+    zoomingScrollView.tag = BaseTag + index;
     zoomingScrollView.frame = CGRectMake((self.scrollView.xl_width) * index, 0, self.xl_width, self.xl_height);
     self.currentImageIndex = index;
     if ([self highQualityImageURLForIndex:index]) { // 如果提供了高清大图数据源,就去加载
@@ -785,7 +816,7 @@
         [self.savaImageTipLabel removeFromSuperview];
         [self.indicatorView removeFromSuperview];
     }];
-    NSInteger currentIndex = zoomingScrollView.tag - 100;
+    NSInteger currentIndex = zoomingScrollView.tag - BaseTag;
     UIView *sourceView = [self sourceImageViewForIndex:currentIndex];
     if (sourceView == nil) {
         [self dismiss];
@@ -818,6 +849,7 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    XLLogFunc;
     [self showPhotos];
     NSInteger pageNum = floor((scrollView.contentOffset.x + scrollView.bounds.size.width * 0.5) / scrollView.bounds.size.width);
     self.currentImageIndex = pageNum == self.imageCount ? pageNum - 1 : pageNum;

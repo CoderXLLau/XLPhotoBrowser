@@ -61,7 +61,6 @@
 {
     if (!_scrollview) {
         _scrollview = [[UIScrollView alloc] init];
-        _scrollview.frame = CGRectMake(0, 0, XLScreenW, XLScreenH);
         [_scrollview addSubview:self.photoImageView];
         _scrollview.delegate = self;
         _scrollview.clipsToBounds = YES;
@@ -134,6 +133,9 @@
     self.progressView.bounds = CGRectMake(0, 0, 100, 100);
     self.progressView.xl_centerX = self.xl_width * 0.5;
     self.progressView.xl_centerY = self.xl_height * 0.5;
+    self.scrollview.frame = self.bounds;
+    
+    [self setMaxAndMinZoomScales];
 }
 
 #pragma mark    -   UIScrollViewDelegate
@@ -298,8 +300,8 @@
         return;
     }
     CGFloat imageWidthHeightRatio = image.size.width / image.size.height;
-    self.photoImageView.xl_width = XLScreenW;
-    self.photoImageView.xl_height = XLScreenW / imageWidthHeightRatio;
+    self.photoImageView.xl_width = self.xl_width;
+    self.photoImageView.xl_height = self.xl_width / imageWidthHeightRatio;
     self.photoImageView.xl_x = 0;
     if (self.photoImageView.xl_height > XLScreenH) {
         self.photoImageView.xl_y = 0;

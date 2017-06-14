@@ -21,6 +21,7 @@
 		538DBCBC1D3A1D7E00117463 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 538DBCBB1D3A1D7E00117463 /* Assets.xcassets */; };
 		538DBCBF1D3A1D7E00117463 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 538DBCBD1D3A1D7E00117463 /* LaunchScreen.storyboard */; };
 		538DBD1F1D3A23F300117463 /* Test1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 538DBD1E1D3A23F300117463 /* Test1ViewController.m */; };
+		7681E6461EF134BD009D159F /* UIButton+XLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 7681E6451EF134BD009D159F /* UIButton+XLExtension.m */; };
 		76F3ECBD1ED692E80068F559 /* UIImage+XLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 76F3EC9C1ED692E80068F559 /* UIImage+XLExtension.m */; };
 		76F3ECBE1ED692E80068F559 /* UIView+XLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 76F3EC9E1ED692E80068F559 /* UIView+XLExtension.m */; };
 		76F3ECBF1ED692E80068F559 /* FSActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 76F3ECA21ED692E80068F559 /* FSActionSheet.m */; };
@@ -67,6 +68,8 @@
 		538DBCC01D3A1D7E00117463 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		538DBD1D1D3A23F300117463 /* Test1ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Test1ViewController.h; sourceTree = "<group>"; };
 		538DBD1E1D3A23F300117463 /* Test1ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Test1ViewController.m; sourceTree = "<group>"; };
+		7681E6441EF134BD009D159F /* UIButton+XLExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+XLExtension.h"; sourceTree = "<group>"; };
+		7681E6451EF134BD009D159F /* UIButton+XLExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+XLExtension.m"; sourceTree = "<group>"; };
 		76F3EC9B1ED692E80068F559 /* UIImage+XLExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+XLExtension.h"; sourceTree = "<group>"; };
 		76F3EC9C1ED692E80068F559 /* UIImage+XLExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+XLExtension.m"; sourceTree = "<group>"; };
 		76F3EC9D1ED692E80068F559 /* UIView+XLExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+XLExtension.h"; sourceTree = "<group>"; };
@@ -143,6 +146,7 @@
 		538DBCAE1D3A1D7E00117463 /* XLPhotoBrowserDemo */ = {
 			isa = PBXGroup;
 			children = (
+				7681E6471EF134C0009D159F /* Category */,
 				538DBCB21D3A1D7E00117463 /* AppDelegate.h */,
 				538DBCB31D3A1D7E00117463 /* AppDelegate.m */,
 				538DBCB51D3A1D7E00117463 /* ViewController.h */,
@@ -187,6 +191,15 @@
 				84BBA3CE16CB284BED37DEEA /* Pods-XLPhotoBrowserDemo.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		7681E6471EF134C0009D159F /* Category */ = {
+			isa = PBXGroup;
+			children = (
+				7681E6441EF134BD009D159F /* UIButton+XLExtension.h */,
+				7681E6451EF134BD009D159F /* UIButton+XLExtension.m */,
+			);
+			name = Category;
 			sourceTree = "<group>";
 		};
 		76F3EC9A1ED692E80068F559 /* XLPhotoBrowser+CoderXL */ = {
@@ -384,6 +397,7 @@
 			files = (
 				76F3ECBF1ED692E80068F559 /* FSActionSheet.m in Sources */,
 				76F3ECCB1ED692E80068F559 /* XLZoomingScrollView.m in Sources */,
+				7681E6461EF134BD009D159F /* UIButton+XLExtension.m in Sources */,
 				76F3ECC61ED692E80068F559 /* TAAnimatedDotView.m in Sources */,
 				5367ACAB1D3F85E100824A19 /* Test3ViewController.m in Sources */,
 				76F3ECBD1ED692E80068F559 /* UIImage+XLExtension.m in Sources */,

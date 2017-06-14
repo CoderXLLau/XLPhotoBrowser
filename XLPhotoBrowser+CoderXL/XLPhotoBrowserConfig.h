@@ -61,7 +61,6 @@ typedef NS_ENUM(NSUInteger, XLProgressViewMode){
 
 
 
-
 #define XLPBLog(...) XLFormatLog(__VA_ARGS__)
 
 #if XLPhotoBrowserDebug
@@ -70,8 +69,12 @@ typedef NS_ENUM(NSUInteger, XLProgressViewMode){
 NSString *string = [NSString stringWithFormat:__VA_ARGS__];\
 NSLog(@"\n===========================\n===========================\n=== XLPhotoBrowser' Log ===\n提示信息:%@\n所在方法:%s\n所在行数:%d\n===========================\n===========================",string,__func__,__LINE__);\
 }
+
+#define XLLogFunc NSLog(@"%s",__func__)
+
 #else
 #define XLFormatLog(...)
+#define XLLogFunc 
 #endif
 
 
