@@ -23,16 +23,16 @@ pod 'XLPhotoBrowser+CoderXL'
 
 #### 2.2 第二种方法 :
 
-*  下载示例Demo
-*  把里面的XLPhotoBrowser文件夹拖到你的项目中(注意: 里面用到了一些第三方的类库,如果你的项目中已经使用了这些库,视情况删除)
-*  如果你的项目中没有用到SDWebImage框架,把图中SDWebImage文件夹也一起拖到你的工程中
+*  2.2.1 下载示例Demo
+*  2.2.2 把里面的XLPhotoBrowser文件夹拖到你的项目中(注意: 里面用到了一些第三方的类库,如果你的项目中已经使用了这些库,视情况删除)
+*  2.2.3 如果你的项目中没有用到SDWebImage框架,把图中SDWebImage文件夹也一起拖到你的工程中
 
 
 ![Paste_Image.png](http://upload-images.jianshu.io/upload_images/1455933-526e4542398d4597.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 #### 注意:
-*  XLPhotoBrowser依赖于SDWebImage框架[3.8.0,3.9.0),由于SDWebImage4.0版本对API进行了修改,所以不兼容4.0版本
+*  XLPhotoBrowser依赖于SDWebImage框架[3.8.0,3.9.0),`由于SDWebImage4.0版本对API进行了修改,所以不兼容4.0版本`
 
 
 ## 3. 使用说明
@@ -236,6 +236,13 @@ pod 'XLPhotoBrowser+CoderXL'
 		* 打开在XLPhotoBrowserConfig中的这个代码即可 //#define XLPhotoBrowserDebug 1  
 	*  还可以在这里修改很多样式属性,如:修改浏览器的背景色/图片间隔等 ,使用方式很简单,具体的使用就不在这里赘述
 
-## 4. 喜欢的话,就给作者一个star ,你可以通过下面的方式联系到我
+## 4. 更新日志
+    *   1.1.0 
+        *   1. 优化框架结构，XLPhotoBrowser内部维护一个优先级为maxfloat的UIWindow，避免不同的项目会因为窗口问题造成XLPhotoBrowser显示不正确等问题
+        *   2. 修改FSActionSheet源码，修复长按弹出ActionSheet显示在图片后面等问题
+        *   3. 优化图片放大缩小处理逻辑，修复已知bug
+
+
+## 5. 喜欢的话,就给作者一个star ,你可以通过下面的方式联系到我
 *  QQ群 : 579572313 (有什么问题,欢迎进群讨论提问)
 *  邮箱 : coder_xl@163.com
