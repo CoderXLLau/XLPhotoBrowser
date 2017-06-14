@@ -99,7 +99,7 @@
 - (void)setBrowserStyle:(XLPhotoBrowserStyle)browserStyle
 {
     _browserStyle = browserStyle;
-    [self setUpBrowserStyle];
+     [self updatePageControlIndex];
 }
 
 - (void)setShowPageControl:(BOOL)showPageControl
@@ -248,7 +248,6 @@
     [self setUpScrollView];
     [self setUpPageControl];
     [self setUpToolBars];
-    [self setUpBrowserStyle];
     [self showFirstImage];
     [self updatePageControlIndex];
 }
@@ -361,35 +360,6 @@
     saveButton.frame = CGRectMake(30, self.bounds.size.height - 70, 50, 25);
     self.saveButton = saveButton;
     [self addSubview:saveButton];
-}
-
-- (void)setUpBrowserStyle
-{
-    switch (self.browserStyle) {
-        case XLPhotoBrowserStylePageControl:
-        {
-            self.pageControl.hidden = NO;
-            self.indexLabel.hidden = YES;
-            self.saveButton.hidden = YES;
-        }
-            break;
-        case XLPhotoBrowserStyleIndexLabel:
-        {
-            self.indexLabel.hidden = NO;
-            self.pageControl.hidden = YES;
-            self.saveButton.hidden = YES;
-        }
-            break;
-        case XLPhotoBrowserStyleSimple:
-        {
-            self.indexLabel.hidden = NO;
-            self.saveButton.hidden = NO;
-            self.pageControl.hidden = YES;
-        }
-            break;
-        default:
-            break;
-    }
 }
 
 - (void)dealloc
@@ -834,12 +804,37 @@
         self.pageControl.hidden = YES;
         return;
     }
+    
     UIPageControl *pageControl = (UIPageControl *)self.pageControl;
     pageControl.currentPage = self.currentImageIndex;
     NSString *title = [NSString stringWithFormat:@"%zd / %zd",self.currentImageIndex+1,self.imageCount];
     self.indexLabel.text = title;
     
-    [self setUpBrowserStyle];
+    switch (self.browserStyle) {
+        case XLPhotoBrowserStylePageControl:
+        {
+            self.pageControl.hidden = NO;
+            self.indexLabel.hidden = YES;
+            self.saveButton.hidden = YES;
+        }
+            break;
+        case XLPhotoBrowserStyleIndexLabel:
+        {
+            self.indexLabel.hidden = NO;
+            self.pageControl.hidden = YES;
+            self.saveButton.hidden = YES;
+        }
+            break;
+        case XLPhotoBrowserStyleSimple:
+        {
+            self.indexLabel.hidden = NO;
+            self.saveButton.hidden = NO;
+            self.pageControl.hidden = YES;
+        }
+            break;
+        default:
+            break;
+    }
 }
 
 #pragma mark    -   public method
@@ -962,18 +957,17 @@
 + (instancetype)showPhotoBrowserWithImages:(NSArray *)images currentImageIndex:(NSInteger)currentImageIndex
 {
     if (images.count <=0 || images ==nil) {
-        XLPBLog(@"一行代码展示图片浏览的方法,传入的数据源为空,不进入图片浏览,请检查传入数据源");
+        XLPBLog(@"一行代码展示图片浏览的方法,传入的数据源为空,请检查传入数据源");
         return nil;
     }
     
-    //检查数据源对象是否一直，如有需要自行打开
-    //    Class imageClass = [images.firstObject class];
-    //    for (id image in images) {
-    //        if (![image isKindOfClass:imageClass]) {
-    //            XLPBLog(@"传入的数据源数组内对象类型不一致,暂不支持,请检查");
-    //            return nil;
-    //        }
-    //    }
+    //检查数据源对象是否非法
+    for (id image in images) {
+        if (![image isKindOfClass:[UIImage class]] && ![image isKindOfClass:[NSString class]] && ![image isKindOfClass:[NSURL class]] && ![image isKindOfClass:[ALAsset class]]) {
+            XLPBLog(@"识别到非法数据格式,请检查传入数据是否为 NSString/NSURL/ALAsset 中一种");
+            return nil;
+        }
+    }
     
     XLPhotoBrowser *browser = [[XLPhotoBrowser alloc] init];
     browser.imageCount = images.count;

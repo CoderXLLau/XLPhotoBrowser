@@ -19,7 +19,7 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserStyle){
      */
     XLPhotoBrowserStyleIndexLabel = 2,
     /**
-     * 没有功能组件,顶部一个索引UILabel,底部一个保存图片按钮
+     * 没有长按图片弹出的功能组件,顶部一个索引UILabel,底部一个保存图片按钮
      */
     XLPhotoBrowserStyleSimple = 3
 };
@@ -35,7 +35,8 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlAliment){
     /**
      *  pageControl 中间
      */
-    XLPhotoBrowserPageControlAlimentCenter = 2
+    XLPhotoBrowserPageControlAlimentCenter = 2,
+    XLPhotoBrowserPageControlAlimentLeft = 3
 };
 
 /**
