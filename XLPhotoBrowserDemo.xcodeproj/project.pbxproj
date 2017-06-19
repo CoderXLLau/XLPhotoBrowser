@@ -205,11 +205,11 @@
 		76F3EC9A1ED692E80068F559 /* XLPhotoBrowser+CoderXL */ = {
 			isa = PBXGroup;
 			children = (
+				76F3EC9F1ED692E80068F559 /* Vender */,
 				76F3EC9B1ED692E80068F559 /* UIImage+XLExtension.h */,
 				76F3EC9C1ED692E80068F559 /* UIImage+XLExtension.m */,
 				76F3EC9D1ED692E80068F559 /* UIView+XLExtension.h */,
 				76F3EC9E1ED692E80068F559 /* UIView+XLExtension.m */,
-				76F3EC9F1ED692E80068F559 /* Vender */,
 				76F3ECB51ED692E80068F559 /* XLPhotoBrowser.h */,
 				76F3ECB61ED692E80068F559 /* XLPhotoBrowser.m */,
 				76F3ECB71ED692E80068F559 /* XLPhotoBrowserConfig.h */,
@@ -542,7 +542,7 @@
 				INFOPLIST_FILE = XLPhotoBrowserDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.shannoon.XLPhotoBrow;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shannoon.XLPhotoBrower;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -556,7 +556,7 @@
 				INFOPLIST_FILE = XLPhotoBrowserDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.shannoon.XLPhotoBrow;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shannoon.XLPhotoBrower;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

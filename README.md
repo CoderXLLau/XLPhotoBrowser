@@ -250,3 +250,6 @@ pod 'XLPhotoBrowser+CoderXL'
 ## 5. 喜欢的话,就给作者一个star ,你可以通过下面的方式联系到我
 *  QQ群 : 579572313 (有什么问题,欢迎进群讨论提问)
 *  邮箱 : coder_xl@163.com
+
+## 6. 常见问题，可以参考这篇帖子[XLPhotoBrowser常见问题汇总](http://www.jianshu.com/p/2be8e90ff0dc)
+
