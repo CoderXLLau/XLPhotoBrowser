@@ -59,7 +59,7 @@ typedef NS_ENUM(NSUInteger, XLProgressViewMode){
 // 圆环形图片下载进度指示器 环线宽度
 #define XLProgressViewLoopDiagramLineWidth 8
 
-
+#define kMinPanLength 100.0f
 
 
 #define XLPBLog(...) XLFormatLog(__VA_ARGS__)
