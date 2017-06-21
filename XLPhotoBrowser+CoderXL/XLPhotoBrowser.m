@@ -109,8 +109,8 @@
 {
     if (!_photoBrowserWindow) {
         _photoBrowserWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-//        _photoBrowserWindow.windowLevel = MAXFLOAT;
-        _photoBrowserWindow.windowLevel = UIWindowLevelAlert;//2000的优先级,这样不会遮盖UIAlertView的提示弹框
+        _photoBrowserWindow.windowLevel = MAXFLOAT;
+//        _photoBrowserWindow.windowLevel = UIWindowLevelAlert;//2000的优先级,这样不会遮盖UIAlertView的提示弹框
         UIViewController *tempVC = [[UIViewController alloc] init];
         tempVC.view.backgroundColor = XLPhotoBrowserBackgrounColor;
 ;

@@ -121,7 +121,6 @@
     [singleTapBackgroundView requireGestureRecognizerToFail:doubleTapBackgroundView];
     [self addGestureRecognizer:singleTapBackgroundView];
     [self addGestureRecognizer:doubleTapBackgroundView];
-    [self.scrollview.panGestureRecognizer addTarget:self action:@selector(scrollViewPanGesture:)];
 }
 
 - (void)layoutSubviews
@@ -216,42 +215,6 @@
 {
     self.scrollview.maximumZoomScale = 1.0;
     self.scrollview.minimumZoomScale = 1.0;
-}
-
-#pragma mark    -   拖拽返回
-
--(void)scrollViewPanGesture:(UIPanGestureRecognizer*)pan{
-    if (self.scrollview.zoomScale != 1.0f) {return;}
-    if (self.scrollview.contentOffset.y > 0) {return;}
-    //拖拽结束后判断位置
-    if (pan.state == UIGestureRecognizerStateEnded) {
-        if (ABS(self.scrollview.contentOffset.y) < kMinPanLength) {
-            [UIView animateWithDuration:0.35 animations:^{
-                self.scrollview.contentInset = UIEdgeInsetsZero;
-            }];
-        }else{
-            [UIView animateWithDuration:0.35 animations:^{
-                //设置移除动画
-                CGRect frame = self.imageView.frame;
-                frame.origin.y = self.scrollview.bounds.size.height;
-                self.imageView.frame = frame;
-                self.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
-            }completion:^(BOOL finished) {
-                //先通知上层返回
-                [self singleTapBackgroundView:nil];
-//                _finishHideBlock();
-                //重置状态
-//                self.imageView.frame = [self imageViewFrame];
-//                _scrollView.contentInset = UIEdgeInsetsZero;
-            }];
-        }
-    }else{
-        //拖拽过程中逐渐改变透明度
-        self.scrollview.contentInset = UIEdgeInsetsMake(-self.scrollview.contentOffset.y, 0, 0, 0);
-        CGFloat alpha = 1 - ABS(self.scrollview.contentOffset.y/(self.scrollview.bounds.size.height));
-        self.backgroundColor = [UIColor colorWithWhite:0 alpha:alpha];
-//        _startHideBlock();
-    }
 }
 
 #pragma mark    -   public method
