@@ -307,7 +307,7 @@
         self.scrollview.scrollEnabled = YES;
     } else {
         self.photoImageView.xl_y = (XLScreenH - self.photoImageView.xl_height ) * 0.5;
-        self.scrollview.scrollEnabled = YES;// TODO
+        self.scrollview.scrollEnabled = NO;
     }
     self.scrollview.maximumZoomScale = MAX(XLScreenH / self.photoImageView.xl_height, 3.0);
     self.scrollview.minimumZoomScale = 1.0;
