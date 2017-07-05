@@ -6,11 +6,15 @@
 //  Copyright © 2016年 LiuShannoon. All rights reserved.
 //
 
+#if __has_include(<SDWebImage/UIImageView+WebCache.h>)
+#import <SDWebImage/UIImageView+WebCache.h>
+#else
+#import "UIImageView+WebCache.h"
+#endif
+
 #import "UIView+XLExtension.h"
 #import "UIImage+XLExtension.h"
 #import "XLPhotoBrowserTypeDefine.h"
-
-#import <SDWebImage/UIImageView+WebCache.h>
 
 #define XLPhotoBrowserDebug 1
 //是否开启断言调试模式
@@ -61,7 +65,6 @@ typedef NS_ENUM(NSUInteger, XLProgressViewMode){
 
 #define kMinPanLength 100.0f
 
-
 #define XLPBLog(...) XLFormatLog(__VA_ARGS__)
 
 #if XLPhotoBrowserDebug
@@ -70,9 +73,7 @@ typedef NS_ENUM(NSUInteger, XLProgressViewMode){
 NSString *string = [NSString stringWithFormat:__VA_ARGS__];\
 NSLog(@"\n===========================\n===========================\n=== XLPhotoBrowser' Log ===\n提示信息:%@\n所在方法:%s\n所在行数:%d\n===========================\n===========================",string,__func__,__LINE__);\
 }
-
 #define XLLogFunc NSLog(@"%s",__func__)
-
 #else
 #define XLFormatLog(...)
 #define XLLogFunc 
