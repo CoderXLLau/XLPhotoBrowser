@@ -17,20 +17,6 @@
 #define IsOpenAssertDebug 1
 #define XLPhotoBrowserVersion @"1.2.0"
 
-/**
- *  进度视图类型类型
- */
-typedef NS_ENUM(NSUInteger, XLProgressViewMode){
-    /**
-     *  圆环形
-     */
-    XLProgressViewModeLoopDiagram = 1,
-    /**
-     *  圆饼型
-     */
-    XLProgressViewModePieDiagram = 2
-};
-
 // 图片保存成功提示文字
 #define XLPhotoBrowserSaveImageSuccessText @" ^_^ 保存成功 ";
 // 图片保存失败提示文字
@@ -70,9 +56,7 @@ typedef NS_ENUM(NSUInteger, XLProgressViewMode){
 NSString *string = [NSString stringWithFormat:__VA_ARGS__];\
 NSLog(@"\n===========================\n===========================\n=== XLPhotoBrowser' Log ===\n提示信息:%@\n所在方法:%s\n所在行数:%d\n===========================\n===========================",string,__func__,__LINE__);\
 }
-
 #define XLLogFunc NSLog(@"%s",__func__)
-
 #else
 #define XLFormatLog(...)
 #define XLLogFunc 

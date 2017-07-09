@@ -57,3 +57,17 @@ typedef NS_ENUM(NSUInteger, XLPhotoBrowserPageControlStyle){
     XLPhotoBrowserPageControlStyleNone = 3
     
 };
+
+/**
+ *  进度视图类型类型
+ */
+typedef NS_ENUM(NSUInteger, XLProgressViewMode){
+    /**
+     *  圆环形
+     */
+    XLProgressViewModeLoopDiagram = 1,
+    /**
+     *  圆饼型
+     */
+    XLProgressViewModePieDiagram = 2
+};
