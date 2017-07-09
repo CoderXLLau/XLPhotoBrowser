@@ -6,11 +6,15 @@
 //  Copyright © 2016年 LiuShannoon. All rights reserved.
 //
 
+#if __has_include(<SDWebImage/UIImageView+WebCache.h>)
+#import <SDWebImage/UIImageView+WebCache.h>
+#else
+#import "UIImageView+WebCache.h"
+#endif
+
 #import "UIView+XLExtension.h"
 #import "UIImage+XLExtension.h"
 #import "XLPhotoBrowserTypeDefine.h"
-
-#import <SDWebImage/UIImageView+WebCache.h>
 
 #define XLPhotoBrowserDebug 1
 //是否开启断言调试模式
@@ -46,7 +50,6 @@
 #define XLProgressViewLoopDiagramLineWidth 8
 
 #define kMinPanLength 100.0f
-
 
 #define XLPBLog(...) XLFormatLog(__VA_ARGS__)
 

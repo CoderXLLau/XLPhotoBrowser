@@ -12,6 +12,7 @@
 ![长按图片弹出多功能选择框](http://upload-images.jianshu.io/upload_images/1455933-13cc70c17b279ace.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ###	其他效果图:
 ![XLPhotoBrowserDemo.gif](http://upload-images.jianshu.io/upload_images/1455933-597296ec3f5594a0.gif?imageMogr2/auto-orient/strip)![XLPhotoBrowserDemo2.gif](http://upload-images.jianshu.io/upload_images/1455933-1b3f77d0f122d42e.gif?imageMogr2/auto-orient/strip)
+![横屏效果图](http://upload-images.jianshu.io/upload_images/1455933-0c44df83d8a4e551.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 2. 安装方法
 #### 2.1 第一种方法:  使用cocoapods自动安装
