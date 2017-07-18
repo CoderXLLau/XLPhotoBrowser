@@ -978,6 +978,7 @@
         self.alpha = 0.0;
     } completion:^(BOOL finished) {
         [self removeFromSuperview];
+        [self.photoBrowserWindow.rootViewController.view removeFromSuperview];/// 2017.7.18 fix bugs on ios 9.0+
         self.photoBrowserWindow = nil;
     }];
 }
