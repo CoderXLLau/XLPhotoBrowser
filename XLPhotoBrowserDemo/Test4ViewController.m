@@ -23,6 +23,7 @@
 {
     XLPhotoBrowser *browser = [XLPhotoBrowser showPhotoBrowserWithCurrentImageIndex:tap.view.tag imageCount:self.images.count datasource:self];
     browser.browserStyle = XLPhotoBrowserStyleSimple;
+    
 }
 
 #pragma mark    -   XLPhotoBrowserDatasource

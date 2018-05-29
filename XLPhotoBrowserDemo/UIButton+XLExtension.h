@@ -15,7 +15,4 @@
 /** 是否关闭自动处理高亮和普通状态下的UI , 默认不关闭 */
 @property (nonatomic , assign) BOOL disabledCustomHighlightedUI;
 
-+ (instancetype)xl_buttonIconFontButtonWithFontSize:(CGFloat)fontSize iconFontUnicode:(NSString *)iconFontUnicode target:(id)target action:(SEL)action;
-
-
 @end

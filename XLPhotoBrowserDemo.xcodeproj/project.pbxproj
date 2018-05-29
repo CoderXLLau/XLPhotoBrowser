@@ -306,6 +306,7 @@
 					538DBCAB1D3A1D7E00117463 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = QC83AGNAJ7;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -538,12 +539,15 @@
 			baseConfigurationReference = F7A599F3A5609494D4D0D012 /* Pods-XLPhotoBrowserDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = QC83AGNAJ7;
 				INFOPLIST_FILE = XLPhotoBrowserDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.shannoon.XLPhotoBrow;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shannoon.XLPhotoBrower;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
 		};
@@ -552,12 +556,15 @@
 			baseConfigurationReference = 84BBA3CE16CB284BED37DEEA /* Pods-XLPhotoBrowserDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = QC83AGNAJ7;
 				INFOPLIST_FILE = XLPhotoBrowserDemo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.shannoon.XLPhotoBrow;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shannoon.XLPhotoBrower;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;
 		};

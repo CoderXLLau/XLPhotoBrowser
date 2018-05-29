@@ -292,12 +292,11 @@
     self.photoImageView.image = placeholder;
     [self setMaxAndMinZoomScales];
     
-    __weak typeof(self) weakSelf = self;
-
     [self addSubview:self.progressView];;
     self.progressView.mode = XLProgressViewProgressMode;
     self.imageURL = url;
 
+    __weak typeof(self) weakSelf = self;
     // TODO 失败点击重新下载功能
     [weakSelf.photoImageView sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed| SDWebImageLowPriority| SDWebImageHandleCookies progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
         dispatch_async(dispatch_get_main_queue(), ^{
